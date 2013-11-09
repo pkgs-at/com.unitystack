@@ -30,11 +30,44 @@ namespace At.Pkgs.Logging
 
         private LogLevel _level;
 
+        internal class Shadow
+        {
+
+            private Log _instance;
+
+            internal Shadow(Log instance)
+            {
+                this._instance = instance;
+            }
+
+            internal Log Instance
+            {
+                get
+                {
+                    return this._instance;
+                }
+            }
+
+            internal LogLevel Level
+            {
+                get
+                {
+                    return this._instance._level;
+                }
+                set
+                {
+                    this._instance._level = value;
+                }
+            }
+
+        }
+
         public Log(LogManager manager, string name)
         {
             this._manager = new WeakReference(manager);
             this._name = name;
             this._level = LogLevel.None;
+            manager.Register(new Log.Shadow(this));
         }
 
         public string Name
@@ -50,10 +83,6 @@ namespace At.Pkgs.Logging
             get
             {
                 return this._level;
-            }
-            set
-            {
-                this._level = value;
             }
         }
 

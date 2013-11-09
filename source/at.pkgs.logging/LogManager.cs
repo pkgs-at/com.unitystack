@@ -25,13 +25,13 @@ namespace At.Pkgs.Logging
     public class LogManager
     {
 
-        private Dictionary<String, Log> _map;
+        private Dictionary<String, Log.Shadow> _map;
 
         private Appender _appender;
 
         public LogManager()
         {
-            this._map = new Dictionary<String, Log>();
+            this._map = new Dictionary<String, Log.Shadow>();
             this._appender = new NullAppender();
         }
 
@@ -57,27 +57,32 @@ namespace At.Pkgs.Logging
             }
         }
 
-        protected Log CreateLog(string name)
+        internal void Register(Log.Shadow shadow)
         {
-            Log log;
+            lock (this._map) /* paranoia */
+            {
+                this._map.Add(shadow.Instance.Name, shadow);
+            }
+        }
 
-            log = new Log(this, name);
-            // TODO
-            log.Level = LogLevel.Debug;
-            return log;
+        protected void CreateLogFor(string name)
+        {
+            new Log(this, name);
+            // TODO detect log level
+            this._map[name].Level = LogLevel.Debug;
         }
 
         public Log LogFor(string name)
         {
-            Log log;
+            Log.Shadow shadow;
 
-            if (this._map.TryGetValue(name, out log)) return log;
+            if (this._map.TryGetValue(name, out shadow)) return shadow.Instance;
             lock (this._map)
             {
                 if (!this._map.ContainsKey(name))
-                    this._map[name] = this.CreateLog(name);
+                    this.CreateLogFor(name);
             }
-            return this._map[name];
+            return this._map[name].Instance;
         }
 
         public Log LogFor(Object target)
