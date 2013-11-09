@@ -67,7 +67,7 @@ namespace At.Pkgs.Logging
             this._manager = new WeakReference(manager);
             this._name = name;
             this._level = LogLevel.None;
-            manager.Register(new Log.Shadow(this));
+            manager.Add(new Log.Shadow(this));
         }
 
         public string Name
