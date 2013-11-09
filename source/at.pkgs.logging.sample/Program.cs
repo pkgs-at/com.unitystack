@@ -84,7 +84,6 @@ namespace At.Pkgs.Logging.Sample
             {
                 formatter.MessageFormat =
                     "{1:yyyy-MM-dd'T'HH:mm:dd.fff} {3,-7} {2} {9}{0}{10}";
-
             }
             this.WriteLog();
         }

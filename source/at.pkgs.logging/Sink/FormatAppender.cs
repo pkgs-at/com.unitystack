@@ -36,7 +36,7 @@ namespace At.Pkgs.Logging.Sink
             this._messageFormat =
                 "{1:yyyy-MM-dd'T'HH:mm:dd.fff} {3,-7} {2}{0}at {4}::{5}() in {6}:{7}{0}{9}{0}{10}";
             this._exceptionFormat =
-                "with exception: {1}{0}{2}{0}";
+                "with exception: {1}{0}";
         }
 
         public string NewLine
@@ -130,8 +130,10 @@ namespace At.Pkgs.Logging.Sink
                     cause = String.Format(
                         this._exceptionFormat,
                         /*  {0} */ this._newLine,
-                        /*  {1} */ entity.Cause.Message,
-                        /*  {2} */ entity.Cause.StackTrace);
+                        /*  {1} */ entity.Cause,
+                        /*  {2} */ entity.Cause.GetType().FullName,
+                        /*  {3} */ entity.Cause.Message,
+                        /*  {4} */ entity.Cause.StackTrace);
                 }
             }
             this.Append(
