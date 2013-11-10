@@ -27,6 +27,7 @@ namespace At.Pkgs.Logging.Sink
 
         public AppenderWrapper(Appender appender)
         {
+            if (appender == null) throw new ArgumentNullException();
             this._appender = appender;
         }
 
@@ -54,6 +55,7 @@ namespace At.Pkgs.Logging.Sink
 
         public Appender Unwrap(Type type)
         {
+            if (type == null) throw new ArgumentNullException();
             if (type.IsAssignableFrom(this.GetType()))
                 return this;
             else

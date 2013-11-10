@@ -29,6 +29,7 @@ namespace At.Pkgs.Logging.Rule
 
         public LogMatcherLevelResolver(LogMatcher matcher, LogLevel level)
         {
+            if (matcher == null) throw new ArgumentNullException();
             this._matcher = matcher;
             this._level = level;
         }

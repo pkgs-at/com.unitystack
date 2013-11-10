@@ -28,6 +28,7 @@ namespace At.Pkgs.Logging.Sink
 
         public WriterAppender(StreamWriter writer)
         {
+            if (writer == null) throw new ArgumentNullException();
             this._writer = writer;
         }
 

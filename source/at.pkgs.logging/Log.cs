@@ -63,7 +63,7 @@ namespace At.Pkgs.Logging
 
         }
 
-        public Log(LogManager manager, string name)
+        internal Log(LogManager manager, string name)
         {
             this._manager = new WeakReference(manager);
             this._name = name;
@@ -119,6 +119,7 @@ namespace At.Pkgs.Logging
             if (level > this._level) return;
             if (!this._manager.IsAlive) return;
             manager = (LogManager)this._manager.Target;
+            format = format == null ? "" : format;
             entity = new LogEntity();
             entity.Timestamp = DateTime.Now;
             if (manager.LogProcessId)

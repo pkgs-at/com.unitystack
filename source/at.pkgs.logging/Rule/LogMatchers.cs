@@ -31,6 +31,7 @@ namespace At.Pkgs.Logging.Rule
 
             internal NotMatcher(LogMatcher matcher)
             {
+                if (matcher == null) throw new ArgumentNullException();
                 this._matcher = matcher;
             }
 
@@ -48,6 +49,9 @@ namespace At.Pkgs.Logging.Rule
 
             internal AndMatcher(params LogMatcher[] matchers)
             {
+                if (matchers == null) throw new ArgumentNullException();
+                foreach (LogMatcher matcher in matchers)
+                    if (matcher == null) throw new ArgumentNullException();
                 this._matchers = matchers;
             }
 
@@ -69,6 +73,9 @@ namespace At.Pkgs.Logging.Rule
 
             internal OrMatcher(params LogMatcher[] matchers)
             {
+                if (matchers == null) throw new ArgumentNullException();
+                foreach (LogMatcher matcher in matchers)
+                    if (matcher == null) throw new ArgumentNullException();
                 this._matchers = matchers;
             }
 
@@ -90,6 +97,7 @@ namespace At.Pkgs.Logging.Rule
 
             public NameMatchesPatternMatcher(string pattern)
             {
+                if (pattern == null) throw new ArgumentNullException();
                 pattern = Regex.Escape(pattern);
                 pattern = pattern.Replace(@"\*", @".*");
                 pattern = pattern.Replace(@"-", @"[^\.]*");

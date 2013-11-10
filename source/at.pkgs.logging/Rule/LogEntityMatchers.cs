@@ -30,6 +30,7 @@ namespace At.Pkgs.Logging.Rule
 
             internal NotMatcher(LogEntityMatcher matcher)
             {
+                if (matcher == null) throw new ArgumentNullException();
                 this._matcher = matcher;
             }
 
@@ -47,6 +48,9 @@ namespace At.Pkgs.Logging.Rule
 
             internal AndMatcher(params LogEntityMatcher[] matchers)
             {
+                if (matchers == null) throw new ArgumentNullException();
+                foreach (LogEntityMatcher matcher in matchers)
+                    if (matcher == null) throw new ArgumentNullException();
                 this._matchers = matchers;
             }
 
@@ -68,6 +72,9 @@ namespace At.Pkgs.Logging.Rule
 
             internal OrMatcher(params LogEntityMatcher[] matchers)
             {
+                if (matchers == null) throw new ArgumentNullException();
+                foreach (LogEntityMatcher matcher in matchers)
+                    if (matcher == null) throw new ArgumentNullException();
                 this._matchers = matchers;
             }
 
@@ -89,6 +96,7 @@ namespace At.Pkgs.Logging.Rule
 
             internal SourceMatchesMatcher(LogMatcher matcher)
             {
+                if (matcher == null) throw new ArgumentNullException();
                 this._matcher = matcher;
             }
 

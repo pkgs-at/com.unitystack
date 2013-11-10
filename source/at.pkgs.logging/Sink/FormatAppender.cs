@@ -228,6 +228,7 @@ namespace At.Pkgs.Logging.Sink
 
         public Appender Unwrap(Type type)
         {
+            if (type == null) throw new ArgumentNullException();
             if (type.IsAssignableFrom(this.GetType()))
                 return this;
             else
@@ -236,7 +237,7 @@ namespace At.Pkgs.Logging.Sink
 
         protected abstract void Append(LogEntity entity, string formatted);
 
-        public string FormatFrames(LogEntity entity)
+        protected string FormatFrames(LogEntity entity)
         {
             StringBuilder builder;
 
@@ -273,7 +274,7 @@ namespace At.Pkgs.Logging.Sink
             return builder.ToString();
         }
 
-        public string FormatCauses(LogEntity entity)
+        protected string FormatCauses(LogEntity entity)
         {
             StringBuilder builder;
             Exception cause;
@@ -294,7 +295,7 @@ namespace At.Pkgs.Logging.Sink
             return builder.ToString();
         }
 
-        public string FormatMessage(LogEntity entity)
+        protected string FormatMessage(LogEntity entity)
         {
             return String.Format(
                 this._messageFormat,

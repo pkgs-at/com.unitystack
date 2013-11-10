@@ -150,6 +150,7 @@ namespace At.Pkgs.Logging
         {
             LogLevel level;
 
+            if (log == null) throw new ArgumentNullException();
             level = LogLevel.Notice;
             this._lock.AcquireReaderLock(Timeout.Infinite);
             try
@@ -174,6 +175,8 @@ namespace At.Pkgs.Logging
             LockCookie cookie;
 
             if (resolvers == null) throw new ArgumentNullException();
+            foreach (LogLevelResolver resolver in resolvers)
+                if (resolver == null) throw new ArgumentNullException();
             cookie = this._lock.UpgradeToWriterLock(Timeout.Infinite);
             try
             {

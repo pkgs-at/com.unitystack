@@ -25,6 +25,7 @@ namespace At.Pkgs.Logging.Sink
 
         public Appender Unwrap(Type type)
         {
+            if (type == null) throw new ArgumentNullException();
             if (type.IsAssignableFrom(this.GetType()))
                 return this;
             else
