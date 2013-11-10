@@ -16,7 +16,10 @@
  */
 
 using System;
+using System.Diagnostics;
 using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace At.Pkgs.Logging.Sink
 {
@@ -24,19 +27,112 @@ namespace At.Pkgs.Logging.Sink
     public abstract class FormatAppender : Appender
     {
 
+        public enum MessageFormatWords
+        {
+
+            NewLine,
+
+            Timestamp,
+            
+            ProcessId,
+
+            ManagedThreadId,
+
+            SourceName,
+            
+            LevelName,
+            
+            Message,
+            
+            Frames,
+            
+            Causes
+
+        }
+
+        public enum FrameFormatWords
+        {
+            NewLine,
+
+            TypeFullName,
+
+            MethodName,
+
+            FileName,
+
+            FileLineNumber,
+
+            FileColumnNumber
+
+        }
+
+        public enum CauseFormatWords
+        {
+
+            NewLine,
+
+            ToString,
+
+            TypeFullName,
+
+            Message,
+
+            StackTrace
+
+        }
+
+        /*
+         * repackaged from At.Pkgs.Util
+         */
+        public static class Strings
+        {
+
+            private static readonly Regex _prepareFormatRegex =
+                new Regex(@"(?<={)\w+");
+
+            public static string PrepareFormat(Type keys, string format)
+            {
+                return _prepareFormatRegex.Replace(format, delegate(Match match)
+                {
+                    return Enum.Format(keys, Enum.Parse(keys, match.Value), "D");
+                });
+            }
+
+            private static readonly Regex _reversePreparedFormatRegex =
+                new Regex(@"(?<={)\d+");
+
+            public static string ReversePreparedFormat(Type keys, string format)
+            {
+                return _reversePreparedFormatRegex.Replace(format, delegate(Match match)
+                {
+                    return Enum.Format(keys, Enum.Parse(keys, match.Value), "G");
+                });
+            }
+
+        }
+
         private string _newLine;
 
         private string _messageFormat;
 
-        private string _exceptionFormat;
+        private string _frameFormat;
+
+        private string _causeFormat;
 
         public FormatAppender()
         {
             this._newLine = "\r\n";
-            this._messageFormat =
-                "{1:yyyy-MM-dd'T'HH:mm:dd.fff} {3,-7} {2}{0}at {4}::{5}() in {6}:{7}{0}{9}{0}{10}";
-            this._exceptionFormat =
-                "with exception: {1}{0}";
+            this.MessageFormat =
+                "{Timestamp:yyyy-MM-dd'T'HH:mm:dd.fff}" +
+                " ({ProcessId:D})-{ManagedThreadId:D} {LevelName,-7}" +
+                " {SourceName} {Message}{NewLine}" +
+                "{Causes}CallStack:{NewLine}{Frames}";
+            this.FrameFormat =
+                " from {TypeFullName}::{MethodName}()" +
+                " in {FileName}:line {FileLineNumber}{NewLine}";
+            this.CauseFormat =
+                "by {TypeFullName}: {Message}{NewLine}" +
+                "{StackTrace}{NewLine}";
         }
 
         public string NewLine
@@ -56,24 +152,77 @@ namespace At.Pkgs.Logging.Sink
         {
             get
             {
-                return this._messageFormat;
+                return Strings.ReversePreparedFormat(
+                    typeof(FormatAppender.MessageFormatWords),
+                    this._messageFormat);
             }
             set
             {
                 if (value == null) throw new ArgumentNullException();
-                this._messageFormat = value;
+                try
+                {
+                    this._messageFormat = Strings.PrepareFormat(
+                        typeof(FormatAppender.MessageFormatWords),
+                        value);
+                }
+                catch (Exception throwable)
+                {
+                    throw new ArgumentException(
+                        "invalid message format: " + value,
+                        throwable);
+                }
             }
         }
 
-        public string ExceptionFormat
+        public string FrameFormat
         {
             get
             {
-                return this._exceptionFormat;
+                return Strings.ReversePreparedFormat(
+                    typeof(FormatAppender.FrameFormatWords),
+                    this._frameFormat);
             }
             set
             {
-                this._exceptionFormat = value;
+                if (value == null) throw new ArgumentNullException();
+                try
+                {
+                    this._frameFormat = Strings.PrepareFormat(
+                        typeof(FormatAppender.FrameFormatWords),
+                        value);
+                }
+                catch (Exception throwable)
+                {
+                    throw new ArgumentException(
+                        "invalid frame format: " + value,
+                        throwable);
+                }
+            }
+        }
+
+        public string CauseFormat
+        {
+            get
+            {
+                return Strings.ReversePreparedFormat(
+                    typeof(FormatAppender.CauseFormatWords),
+                    this._causeFormat);
+            }
+            set
+            {
+                if (value == null) throw new ArgumentNullException();
+                try
+                {
+                    this._causeFormat = Strings.PrepareFormat(
+                        typeof(FormatAppender.CauseFormatWords),
+                        value);
+                }
+                catch (Exception throwable)
+                {
+                    throw new ArgumentException(
+                        "invalid cause format: " + value,
+                        throwable);
+                }
             }
         }
 
@@ -87,70 +236,82 @@ namespace At.Pkgs.Logging.Sink
 
         protected abstract void Append(LogEntity entity, string formatted);
 
-        public void Append(LogEntity entity)
+        public string FormatFrames(LogEntity entity)
         {
-            string level;
-            string className;
-            string methodName;
-            string fileName;
-            int fileLineNumber;
-            int fileColumnNumber;
-            string cause;
+            StringBuilder builder;
 
-            level = System.Enum.Format(typeof(LogLevel), entity.Level, "G").ToUpper();
-            className = "{unknown}";
-            methodName = "{unknown}";
-            fileName = "{unknown}";
-            fileLineNumber = 0;
-            fileColumnNumber = 0;
-            if (entity.Frame != null)
+            builder = new StringBuilder();
+            foreach (StackFrame frame in entity.Frames)
             {
                 MethodBase method;
+                string typeFullName;
+                string methodName;
 
-                method = entity.Frame.GetMethod();
+                method = frame.GetMethod();
+                typeFullName = null;
+                methodName = null;
                 if (method != null)
                 {
-                    className = method.DeclaringType.FullName;
+                    typeFullName = method.DeclaringType.FullName;
                     methodName = method.Name;
-                    if (methodName != null && methodName.Equals(".ctor"))
-                        methodName = "{constructor}";
                 }
-                fileName = entity.Frame.GetFileName();
-                fileLineNumber = entity.Frame.GetFileLineNumber();
-                fileColumnNumber = entity.Frame.GetFileColumnNumber();
+                if (typeFullName == null)
+                    typeFullName = "{unknown}";
+                if (methodName == null)
+                    methodName = "{unknown}";
+                else if (methodName.Equals(".ctor"))
+                    methodName = "{constructor}";
+                builder.AppendFormat(
+                    this._frameFormat,
+                    this._newLine,
+                    typeFullName,
+                    methodName,
+                    frame.GetFileName(),
+                    frame.GetFileLineNumber(),
+                    frame.GetFileColumnNumber());
             }
-            cause = "";
-            if (entity.Cause != null)
-            {
-                string format;
+            return builder.ToString();
+        }
 
-                format = this._exceptionFormat;
-                if (format != null)
-                {
-                    cause = String.Format(
-                        this._exceptionFormat,
-                        /*  {0} */ this._newLine,
-                        /*  {1} */ entity.Cause,
-                        /*  {2} */ entity.Cause.GetType().FullName,
-                        /*  {3} */ entity.Cause.Message,
-                        /*  {4} */ entity.Cause.StackTrace);
-                }
+        public string FormatCauses(LogEntity entity)
+        {
+            StringBuilder builder;
+            Exception cause;
+
+            builder = new StringBuilder();
+            cause = entity.Cause;
+            while (cause != null)
+            {
+                builder.AppendFormat(
+                    this._causeFormat,
+                    this._newLine,
+                    cause,
+                    cause.GetType().FullName,
+                    cause.Message,
+                    cause.StackTrace);
+                cause = cause.InnerException;
             }
-            this.Append(
-                entity,
-                String.Format(
-                    this._messageFormat,
-                /*  {0} */ this._newLine,
-                /*  {1} */ entity.Timestamp,
-                /*  {2} */ entity.Source.Name,
-                /*  {3} */ level,
-                /*  {4} */ className,
-                /*  {5} */ methodName,
-                /*  {6} */ fileName,
-                /*  {7} */ fileLineNumber,
-                /*  {8} */ fileColumnNumber,
-                /*  {9} */ entity.Message,
-                /* {10} */ cause));
+            return builder.ToString();
+        }
+
+        public string FormatMessage(LogEntity entity)
+        {
+            return String.Format(
+                this._messageFormat,
+                this._newLine,
+                entity.Timestamp,
+                entity.ProcessId,
+                entity.ManagedThreadId,
+                entity.Source.Name,
+                System.Enum.Format(typeof(LogLevel), entity.Level, "G").ToUpper(),
+                entity.Message,
+                this.FormatFrames(entity),
+                this.FormatCauses(entity));
+        }
+
+        public void Append(LogEntity entity)
+        {
+            this.Append(entity, this.FormatMessage(entity));
         }
 
         public abstract void Flush();

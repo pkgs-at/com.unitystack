@@ -25,28 +25,33 @@ namespace At.Pkgs.Logging.Sample
     public class Program
     {
 
-        public readonly LogManager LogManager;
-
         private readonly Log _log;
+
+        protected Log Log
+        {
+            get
+            {
+                return this._log;
+            }
+        }
 
         protected Program()
         {
-            this.LogManager = new LogManager();
-            this._log = this.LogManager.LogFor(this);
+            this._log = LogManager.Instance.LogFor(this);
         }
 
         private void WriteLog()
         {
-            this._log.Trace("trace log");
-            this._log.Debug("debug log");
-            this._log.Notice("notice log with {0}", "format");
+            this.Log.Trace("trace log");
+            this.Log.Debug("debug log");
+            this.Log.Notice("notice log with {0}", "format");
             try
             {
                 throw new Exception("exception message");
             }
             catch (Exception throwable)
             {
-                this._log.Error(throwable, "error log with exception");
+                this.Log.Error(throwable, "error log with exception");
             }
             try
             {
@@ -54,36 +59,49 @@ namespace At.Pkgs.Logging.Sample
             }
             catch (Exception throwable)
             {
-                this._log.Fatal(throwable, "fatal log with exception and {0}", "format");
+                this.Log.Fatal(throwable, "fatal log with exception and {0}", "format");
             }
-        }
-
-        protected void SynchronizedConsoleAppender()
-        {
-            this.LogManager.Appender =
-                new Synchronized(
-                    new ConsoleAppender());
-            this.WriteLog();
         }
 
         protected void SynchronizedAutoFlushDiagnosticsDebugAppender()
         {
-            this.LogManager.Appender =
+            LogManager.Instance.Appender =
                 new AutoFlush(
                     new Synchronized(
                         new DiagnosticsDebugAppender()));
             this.WriteLog();
         }
 
+        protected void SynchronizedConsoleAppender()
+        {
+            LogManager.Instance.Appender =
+                new Synchronized(
+                    new ConsoleAppender());
+            this.WriteLog();
+        }
+
+        protected void ChangeLogManagerSettings()
+        {
+            this.Log.Notice("normal");
+            LogManager.Instance.LogProcessId = true;
+            this.Log.Notice("set LogProcessId: true");
+            LogManager.Instance.LogManagedThreadId = true;
+            this.Log.Notice("set LogManagedThreadId: true");
+            LogManager.Instance.LogFrameDepth = 8;
+            this.Log.Notice("set LogFrameDepth: 8");
+            LogManager.Instance.LogExtendedFrame = true;
+            this.Log.Notice("set LogExtendedFrame: true");
+        }
+
         protected void ChangeFormat()
         {
             FormatAppender formatter;
 
-            formatter = (FormatAppender)this.LogManager.Appender.Unwrap(typeof(FormatAppender));
+            formatter = (FormatAppender)LogManager.Instance.Appender.Unwrap(typeof(FormatAppender));
             if (formatter != null)
             {
                 formatter.MessageFormat =
-                    "{1:yyyy-MM-dd'T'HH:mm:dd.fff} {3,-7} {2} {9}{0}{10}";
+                    "{Timestamp:yyyy-MM-dd'T'HH:mm:dd.fff} {LevelName,-7} {SourceName} {Message}{NewLine}{Causes}";
             }
             this.WriteLog();
         }
@@ -93,9 +111,9 @@ namespace At.Pkgs.Logging.Sample
             Program instance;
 
             instance = new Program();
-            instance.SynchronizedConsoleAppender();
-            instance.ChangeFormat();
             instance.SynchronizedAutoFlushDiagnosticsDebugAppender();
+            instance.SynchronizedConsoleAppender();
+            instance.ChangeLogManagerSettings();
             instance.ChangeFormat();
             Console.Write("press ENTER to exit...");
             Console.In.ReadLine();

@@ -24,21 +24,33 @@ using At.Pkgs.Logging.Rule;
 namespace At.Pkgs.Logging
 {
 
-    public class LogManager
+    public sealed class LogManager
     {
 
         private Appender _appender;
 
         private LogLevelResolver[] _resolvers;
 
+        private bool _logProcessId;
+
+        private bool _logManagedThreadId;
+
+        private int _logFrameDepth;
+
+        private bool _logExtendedFrame;
+
         private Dictionary<String, Log.Shadow> _logs;
 
         private ReaderWriterLock _lock;
 
-        public LogManager()
+        private LogManager()
         {
             this._appender = new NullAppender();
             this._resolvers = new LogLevelResolver[0];
+            this._logProcessId = false;
+            this._logManagedThreadId = false;
+            this._logFrameDepth = 0;
+            this._logExtendedFrame = false;
             this._logs = new Dictionary<String, Log.Shadow>();
             this._lock = new ReaderWriterLock();
         }
@@ -65,6 +77,55 @@ namespace At.Pkgs.Logging
             }
         }
 
+        public bool LogProcessId
+        {
+            get
+            {
+                return this._logProcessId;
+            }
+            set
+            {
+                this._logProcessId = value;
+            }
+
+        }
+
+        public bool LogManagedThreadId
+        {
+            get
+            {
+                return this._logManagedThreadId;
+            }
+            set
+            {
+                this._logManagedThreadId = value;
+            }
+        }
+
+        public int LogFrameDepth
+        {
+            get
+            {
+                return this._logFrameDepth;
+            }
+            set
+            {
+                this._logFrameDepth = value;
+            }
+        }
+
+        public bool LogExtendedFrame
+        {
+            get
+            {
+                return this._logExtendedFrame;
+            }
+            set
+            {
+                this._logExtendedFrame = value;
+            }
+        }
+
         internal void Add(Log.Shadow shadow)
         {
             LockCookie cookie;
@@ -85,7 +146,7 @@ namespace At.Pkgs.Logging
             this.Appender.Append(entity);
         }
 
-        protected LogLevel LevelFor(Log log)
+        public LogLevel LevelFor(Log log)
         {
             LogLevel level;
 
@@ -160,6 +221,8 @@ namespace At.Pkgs.Logging
             if (target == null) throw new ArgumentNullException();
             return this.LogFor(target.GetType().FullName);
         }
+
+        public static readonly LogManager Instance = new LogManager();
 
     }
 

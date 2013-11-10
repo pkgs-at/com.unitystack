@@ -26,11 +26,15 @@ namespace At.Pkgs.Logging
 
         public DateTime Timestamp;
 
+        public int ProcessId;
+
+        public int ManagedThreadId;
+
         public Log Source;
 
         public LogLevel Level;
 
-        public StackFrame Frame;
+        public StackFrame[] Frames;
 
         public string Message;
 

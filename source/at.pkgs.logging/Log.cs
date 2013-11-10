@@ -16,12 +16,13 @@
  */
 
 using System;
+using System.Threading;
 using System.Diagnostics;
 
 namespace At.Pkgs.Logging
 {
 
-    public class Log
+    public sealed class Log
     {
 
         private WeakReference _manager;
@@ -91,6 +92,25 @@ namespace At.Pkgs.Logging
             return level <= this._level;
         }
 
+        private StackFrame[] Frames(int start, int depth, bool extended)
+        {
+            int stack;
+            int limit;
+            StackTrace trace;
+            StackFrame[] frames;
+
+            if (depth <= 0) return new StackFrame[0];
+            ++start;
+            stack = start;
+            limit = start + depth;
+            trace = new StackTrace();
+            if (limit > trace.FrameCount) limit = trace.FrameCount;
+            frames = new StackFrame[limit - start];
+            for (; stack < limit; stack++)
+                frames[stack - start] = new StackFrame(stack, extended);
+            return frames;
+        }
+
         public void Append(int depth, LogLevel level, Exception throwable, string format, params object[] arguments)
         {
             LogManager manager;
@@ -101,9 +121,13 @@ namespace At.Pkgs.Logging
             manager = (LogManager)this._manager.Target;
             entity = new LogEntity();
             entity.Timestamp = DateTime.Now;
+            if (manager.LogProcessId)
+                entity.ProcessId = Process.GetCurrentProcess().Id;
+            if (manager.LogManagedThreadId)
+                entity.ManagedThreadId = Thread.CurrentThread.ManagedThreadId;
             entity.Source = this;
             entity.Level = level;
-            entity.Frame = new StackFrame(++depth, true);
+            entity.Frames = this.Frames(++depth, manager.LogFrameDepth, manager.LogExtendedFrame);
             entity.Message = arguments.Length <= 0 ? format : String.Format(format, arguments);
             entity.Cause = throwable;
             manager.Append(entity);
