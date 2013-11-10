@@ -126,7 +126,7 @@ namespace At.Pkgs.Logging.Sink
                 "{Timestamp:yyyy-MM-dd'T'HH:mm:dd.fff}" +
                 " ({ProcessId:D})-{ManagedThreadId:D} {LevelName,-7}" +
                 " {SourceName} {Message}{NewLine}" +
-                "{Causes}CallStack:{NewLine}{Frames}";
+                "{Causes}CallStack:{NewLine}{Frames}{NewLine}";
             this.FrameFormat =
                 " from {TypeFullName}::{MethodName}()" +
                 " in {FileName}:line {FileLineNumber}{NewLine}";

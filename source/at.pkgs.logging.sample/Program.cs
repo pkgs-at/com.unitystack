@@ -16,7 +16,9 @@
  */
 
 using System;
+using System.Collections.Generic;
 using At.Pkgs.Logging;
+using At.Pkgs.Logging.Rule;
 using At.Pkgs.Logging.Sink;
 
 namespace At.Pkgs.Logging.Sample
@@ -35,11 +37,17 @@ namespace At.Pkgs.Logging.Sample
             }
         }
 
+        /*
+         * thisを使用すれば基底クラスで共通処理としてインスタンス取得可能.
+         */
         protected Program()
         {
             this._log = LogManager.Instance.LogFor(this);
         }
 
+        /*
+         * String.Format()相当のフォーマッタ
+         */
         private void WriteLog()
         {
             this.Log.Trace("trace log");
@@ -63,6 +71,10 @@ namespace At.Pkgs.Logging.Sample
             }
         }
 
+        /*
+         * Appender:
+         * 各種ラッパを組み合わせて機能を拡張できる
+         */
         protected void SynchronizedAutoFlushDiagnosticsDebugAppender()
         {
             LogManager.Instance.Appender =
@@ -72,6 +84,10 @@ namespace At.Pkgs.Logging.Sample
             this.WriteLog();
         }
 
+        /*
+         * Appender:
+         * 各種ラッパを組み合わせて機能を拡張できる
+         */
         protected void SynchronizedConsoleAppender()
         {
             LogManager.Instance.Appender =
@@ -80,6 +96,10 @@ namespace At.Pkgs.Logging.Sample
             this.WriteLog();
         }
 
+        /*
+         * LogManager:
+         * 機能ごとのOn/Off、設定変更は動的に反映される
+         */
         protected void ChangeLogManagerSettings()
         {
             this.Log.Notice("normal");
@@ -93,6 +113,12 @@ namespace At.Pkgs.Logging.Sample
             this.Log.Notice("set LogExtendedFrame: true");
         }
 
+        /*
+         * ログフォーマットについて:
+         * 基本はString.Format()
+         * インデックスの代わりにenumに定義した文字列が使用可能に拡張
+         * 参照: At.Pkgs.Logging.Sink.FormatAppender.*FormatWords
+         */
         protected void ChangeFormat()
         {
             FormatAppender formatter;
@@ -106,6 +132,64 @@ namespace At.Pkgs.Logging.Sample
             this.WriteLog();
         }
 
+        /*
+         * LogLevelの制御もLogごとに動的に変更可能
+         * 
+         * パターンについて:
+         * '*'は'.'を含む0個以上の文字にマッチ
+         * '-'は'.'を含まない0個以上の文字にマッチ
+         * 
+         * Rule/LogMatchers.And, Or, Not等を使用して複雑な条件も指定可能
+         */
+        protected void LogLevelResolver()
+        {
+            Log a;
+            Log b;
+            List<LogLevelResolver> resolvers;
+
+            a = LogManager.Instance.LogFor("At.Pkgs.Logging.Sample.SomeAction");
+            b = LogManager.Instance.LogFor("Jp.Architector.Sample.MoreAction");
+            resolvers = new List<LogLevelResolver>();
+            this.Log.Notice("normal");
+            a.Debug("ng");
+            b.Debug("ng");
+            this.Log.Notice("set Debug for all(*)");
+            resolvers.Add(new LogMatcherLevelResolver(
+                LogMatchers.NameMatchesPattern("*"),
+                LogLevel.Debug));
+            LogManager.Instance.Update(resolvers.ToArray());
+            a.Debug("ok");
+            b.Debug("ok");
+            this.Log.Notice("set Notice for Jp.Architector.*");
+            resolvers.Add(new LogMatcherLevelResolver(
+                LogMatchers.NameMatchesPattern("Jp.Architector.*"),
+                LogLevel.Notice));
+            LogManager.Instance.Update(resolvers.ToArray());
+            a.Debug("ok");
+            b.Debug("ng");
+            this.Log.Notice("set Trace for *Action");
+            resolvers.Add(new LogMatcherLevelResolver(
+                LogMatchers.NameMatchesPattern("*Action"),
+                LogLevel.Trace));
+            LogManager.Instance.Update(resolvers.ToArray());
+            a.Trace("ok");
+            b.Trace("ok");
+            this.Log.Trace("ng");
+            this.Log.Notice("set Debug for *.-reAction");
+            resolvers.Add(new LogMatcherLevelResolver(
+                LogMatchers.NameMatchesPattern("*.-reAction"),
+                LogLevel.Debug));
+            LogManager.Instance.Update(resolvers.ToArray());
+            a.Trace("ok");
+            b.Trace("ng");
+            this.Log.Trace("ng");
+        }
+
+        protected void AppenderPipeline()
+        {
+            // TODO
+        }
+
         public static void Main(string[] arguments)
         {
             Program instance;
@@ -115,6 +199,8 @@ namespace At.Pkgs.Logging.Sample
             instance.SynchronizedConsoleAppender();
             instance.ChangeLogManagerSettings();
             instance.ChangeFormat();
+            instance.LogLevelResolver();
+            instance.AppenderPipeline();
             Console.Write("press ENTER to exit...");
             Console.In.ReadLine();
         }

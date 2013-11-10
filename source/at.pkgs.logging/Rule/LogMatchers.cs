@@ -101,7 +101,7 @@ namespace At.Pkgs.Logging.Rule
                 pattern = Regex.Escape(pattern);
                 pattern = pattern.Replace(@"\*", @".*");
                 pattern = pattern.Replace(@"-", @"[^\.]*");
-                this._regex = new Regex(pattern);
+                this._regex = new Regex("^" + pattern + "$");
             }
 
             public bool Matches(Log log)

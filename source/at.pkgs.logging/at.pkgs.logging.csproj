@@ -53,6 +53,7 @@
     <Compile Include="Sink\CloseShield.cs" />
     <Compile Include="Sink\ConsoleAppender.cs" />
     <Compile Include="Sink\DiagnosticsDebugAppender.cs" />
+    <Compile Include="Sink\Filter.cs" />
     <Compile Include="Sink\FormatAppender.cs" />
     <Compile Include="Sink\NullAppender.cs" />
     <Compile Include="Sink\Synchronized.cs" />
