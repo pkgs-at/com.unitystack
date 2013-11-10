@@ -101,7 +101,7 @@ namespace At.Pkgs.Logging
             manager = (LogManager)this._manager.Target;
             entity = new LogEntity();
             entity.Timestamp = DateTime.Now;
-            entity.Source = this.Name;
+            entity.Source = this;
             entity.Level = level;
             entity.Frame = new StackFrame(++depth, true);
             entity.Message = arguments.Length <= 0 ? format : String.Format(format, arguments);

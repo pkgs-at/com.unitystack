@@ -16,25 +16,14 @@
  */
 
 using System;
-using System.Diagnostics;
 
-namespace At.Pkgs.Logging
+namespace At.Pkgs.Logging.Rule
 {
 
-    public struct LogEntity
+    public interface LogMatcher
     {
 
-        public DateTime Timestamp;
-
-        public Log Source;
-
-        public LogLevel Level;
-
-        public StackFrame Frame;
-
-        public string Message;
-
-        public Exception Cause;
+        bool Matches(Log log);
 
     }
 

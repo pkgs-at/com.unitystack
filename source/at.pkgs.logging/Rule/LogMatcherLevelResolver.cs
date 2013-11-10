@@ -16,29 +16,47 @@
  */
 
 using System;
-using System.Text.RegularExpressions;
 
 namespace At.Pkgs.Logging.Rule
 {
 
-    public class SimplePattern : LogLevelResolver
+    public class LogMatcherLevelResolver : LogLevelResolver, LogMatcher
     {
 
-        private readonly Regex _pattern;
+        private readonly LogMatcher _matcher;
 
         private readonly LogLevel _level;
 
-        public SimplePattern(string pattern, LogLevel level)
+        public LogMatcherLevelResolver(LogMatcher matcher, LogLevel level)
         {
-            pattern = Regex.Escape(pattern);
-            // TODO
-            this._pattern = new Regex(pattern);
+            this._matcher = matcher;
             this._level = level;
+        }
+
+        public LogMatcher Matcher
+        {
+            get
+            {
+                return this._matcher;
+            }
+        }
+
+        public LogLevel Level
+        {
+            get
+            {
+                return this._level;
+            }
+        }
+
+        public bool Matches(Log log)
+        {
+            return this._matcher.Matches(log);
         }
 
         public LogLevel? Resolve(Log log)
         {
-            return this._pattern.IsMatch(log.Name) ? (LogLevel?)this._level : null;
+            return this._matcher.Matches(log) ? (LogLevel?)this._level : null;
         }
 
     }

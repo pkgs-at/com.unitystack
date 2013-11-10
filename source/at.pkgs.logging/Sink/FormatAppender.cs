@@ -142,7 +142,7 @@ namespace At.Pkgs.Logging.Sink
                     this._messageFormat,
                 /*  {0} */ this._newLine,
                 /*  {1} */ entity.Timestamp,
-                /*  {2} */ entity.Source,
+                /*  {2} */ entity.Source.Name,
                 /*  {3} */ level,
                 /*  {4} */ className,
                 /*  {5} */ methodName,

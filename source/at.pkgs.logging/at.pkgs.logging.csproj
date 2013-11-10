@@ -39,8 +39,12 @@
     <Compile Include="Log.cs" />
     <Compile Include="LogEntity.cs" />
     <Compile Include="LogLevel.cs" />
+    <Compile Include="Rule\LogEntityMatcher.cs" />
+    <Compile Include="Rule\LogEntityMatchers.cs" />
     <Compile Include="Rule\LogLevelResolver.cs" />
-    <Compile Include="Rule\SimplePattern.cs" />
+    <Compile Include="Rule\LogMatcher.cs" />
+    <Compile Include="Rule\LogMatcherLevelResolver.cs" />
+    <Compile Include="Rule\LogMatchers.cs" />
     <Compile Include="Sink\Appender.cs" />
     <Compile Include="LogManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
