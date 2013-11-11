@@ -42,6 +42,7 @@
     <Compile Include="Rule\LogEntityMatcher.cs" />
     <Compile Include="Rule\LogEntityMatchers.cs" />
     <Compile Include="Rule\LogLevelResolver.cs" />
+    <Compile Include="Rule\LogLevelResolvers.cs" />
     <Compile Include="Rule\LogMatcher.cs" />
     <Compile Include="Rule\LogMatcherLevelResolver.cs" />
     <Compile Include="Rule\LogMatchers.cs" />

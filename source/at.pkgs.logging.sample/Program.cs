@@ -154,21 +154,21 @@ namespace At.Pkgs.Logging.Sample
             a.Debug("ng");
             b.Debug("ng");
             this.Log.Notice("set Debug for all(*)");
-            resolvers.Add(new LogMatcherLevelResolver(
+            resolvers.Add(LogLevelResolvers.LogMatches(
                 LogMatchers.NameMatchesPattern("*"),
                 LogLevel.Debug));
             LogManager.Instance.Update(resolvers.ToArray());
             a.Debug("ok");
             b.Debug("ok");
             this.Log.Notice("set Notice for Jp.Architector.*");
-            resolvers.Add(new LogMatcherLevelResolver(
+            resolvers.Add(LogLevelResolvers.LogMatches(
                 LogMatchers.NameMatchesPattern("Jp.Architector.*"),
                 LogLevel.Notice));
             LogManager.Instance.Update(resolvers.ToArray());
             a.Debug("ok");
             b.Debug("ng");
             this.Log.Notice("set Trace for *Action");
-            resolvers.Add(new LogMatcherLevelResolver(
+            resolvers.Add(LogLevelResolvers.LogMatches(
                 LogMatchers.NameMatchesPattern("*Action"),
                 LogLevel.Trace));
             LogManager.Instance.Update(resolvers.ToArray());
@@ -176,7 +176,7 @@ namespace At.Pkgs.Logging.Sample
             b.Trace("ok");
             this.Log.Trace("ng");
             this.Log.Notice("set Debug for *.-reAction");
-            resolvers.Add(new LogMatcherLevelResolver(
+            resolvers.Add(LogLevelResolvers.LogMatches(
                 LogMatchers.NameMatchesPattern("*.-reAction"),
                 LogLevel.Debug));
             LogManager.Instance.Update(resolvers.ToArray());
