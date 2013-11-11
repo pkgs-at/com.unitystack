@@ -21,20 +21,52 @@ using System.Diagnostics;
 namespace At.Pkgs.Logging.Sink
 {
 
+#if !UNITY
+
     public class DiagnosticsDebugAppender : FormatAppender
     {
 
+        private bool _useFail;
+
+        public DiagnosticsDebugAppender(bool useFail)
+        {
+            this._useFail = useFail;
+        }
+
         public DiagnosticsDebugAppender()
         {
-            // do nothing
+            this._useFail = false;
+        }
+
+        public bool UseFail
+        {
+            get
+            {
+                return this._useFail;
+            }
+            set
+            {
+                this._useFail = value;
+            }
         }
 
         protected override void Append(LogEntity entity, string formatted)
         {
             try
             {
-                // cannot use Write() on UNITY Platform
-                Debug.WriteLine(formatted);
+                switch (entity.Level)
+                {
+                    case LogLevel.Fatal:
+                    case LogLevel.Error:
+                        if (this._useFail)
+                            Debug.Fail(formatted);
+                        else
+                            Debug.Write(formatted);
+                        break;
+                    default:
+                        Debug.Write(formatted);
+                        break;
+                }
             }
             catch
             {
@@ -44,7 +76,14 @@ namespace At.Pkgs.Logging.Sink
 
         public override void Flush()
         {
-            // do nothing
+            try
+            {
+                Debug.Flush();
+            }
+            catch
+            {
+                // do nothing
+            }
         }
 
         public override void Close()
@@ -53,5 +92,7 @@ namespace At.Pkgs.Logging.Sink
         }
 
     }
+
+#endif
 
 }
