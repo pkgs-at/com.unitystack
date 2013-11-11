@@ -138,40 +138,45 @@ namespace At.Pkgs.Logging
         {
             get
             {
-                LogLevel level = LogLevel.Trace;
+                LogLevel level;
 
+                level = LogLevel.Trace;
                 return level <= this._level;
             }
         }
 
         public void Trace(string message)
         {
-            LogLevel level = LogLevel.Trace;
+            LogLevel level;
 
+            level = LogLevel.Trace;
             if (level > this._level) return;
             this.Append(1, level, null, message);
         }
 
         public void Trace(string format, params object[] arguments)
         {
-            LogLevel level = LogLevel.Trace;
+            LogLevel level;
 
+            level = LogLevel.Trace;
             if (level > this._level) return;
             this.Append(1, level, null, format, arguments);
         }
 
         public void Trace(Exception cause, string message)
         {
-            LogLevel level = LogLevel.Trace;
+            LogLevel level;
 
+            level = LogLevel.Trace;
             if (level > this._level) return;
             this.Append(1, level, cause, message);
         }
 
         public void Trace(Exception cause, string format, params object[] arguments)
         {
-            LogLevel level = LogLevel.Trace;
+            LogLevel level;
 
+            level = LogLevel.Trace;
             if (level > this._level) return;
             this.Append(1, level, cause, format, arguments);
         }
@@ -180,40 +185,45 @@ namespace At.Pkgs.Logging
         {
             get
             {
-                LogLevel level = LogLevel.Debug;
+                LogLevel level;
 
+                level = LogLevel.Debug;
                 return level <= this._level;
             }
         }
 
         public void Debug(string message)
         {
-            LogLevel level = LogLevel.Debug;
+            LogLevel level;
 
+            level = LogLevel.Debug;
             if (level > this._level) return;
             this.Append(1, level, null, message);
         }
 
         public void Debug(string format, params object[] arguments)
         {
-            LogLevel level = LogLevel.Debug;
+            LogLevel level;
 
+            level = LogLevel.Debug;
             if (level > this._level) return;
             this.Append(1, level, null, format, arguments);
         }
 
         public void Debug(Exception cause, string message)
         {
-            LogLevel level = LogLevel.Debug;
+            LogLevel level;
 
+            level = LogLevel.Debug;
             if (level > this._level) return;
             this.Append(1, level, cause, message);
         }
 
         public void Debug(Exception cause, string format, params object[] arguments)
         {
-            LogLevel level = LogLevel.Debug;
+            LogLevel level;
 
+            level = LogLevel.Debug;
             if (level > this._level) return;
             this.Append(1, level, cause, format, arguments);
         }
@@ -222,40 +232,45 @@ namespace At.Pkgs.Logging
         {
             get
             {
-                LogLevel level = LogLevel.Notice;
+                LogLevel level;
 
+                level = LogLevel.Notice;
                 return level <= this._level;
             }
         }
 
         public void Notice(string message)
         {
-            LogLevel level = LogLevel.Notice;
+            LogLevel level;
 
+            level = LogLevel.Notice;
             if (level > this._level) return;
             this.Append(1, level, null, message);
         }
 
         public void Notice(string format, params object[] arguments)
         {
-            LogLevel level = LogLevel.Notice;
+            LogLevel level;
 
+            level = LogLevel.Notice;
             if (level > this._level) return;
             this.Append(1, level, null, format, arguments);
         }
 
         public void Notice(Exception cause, string message)
         {
-            LogLevel level = LogLevel.Notice;
+            LogLevel level;
 
+            level = LogLevel.Notice;
             if (level > this._level) return;
             this.Append(1, level, cause, message);
         }
 
         public void Notice(Exception cause, string format, params object[] arguments)
         {
-            LogLevel level = LogLevel.Notice;
+            LogLevel level;
 
+            level = LogLevel.Notice;
             if (level > this._level) return;
             this.Append(1, level, cause, format, arguments);
         }
@@ -264,40 +279,45 @@ namespace At.Pkgs.Logging
         {
             get
             {
-                LogLevel level = LogLevel.Error;
+                LogLevel level;
 
+                level = LogLevel.Error;
                 return level <= this._level;
             }
         }
 
         public void Error(string message)
         {
-            LogLevel level = LogLevel.Error;
+            LogLevel level;
 
+            level = LogLevel.Error;
             if (level > this._level) return;
             this.Append(1, level, null, message);
         }
 
         public void Error(string format, params object[] arguments)
         {
-            LogLevel level = LogLevel.Error;
+            LogLevel level;
 
+            level = LogLevel.Error;
             if (level > this._level) return;
             this.Append(1, level, null, format, arguments);
         }
 
         public void Error(Exception cause, string message)
         {
-            LogLevel level = LogLevel.Error;
+            LogLevel level;
 
+            level = LogLevel.Error;
             if (level > this._level) return;
             this.Append(1, level, cause, message);
         }
 
         public void Error(Exception cause, string format, params object[] arguments)
         {
-            LogLevel level = LogLevel.Error;
+            LogLevel level;
 
+            level = LogLevel.Error;
             if (level > this._level) return;
             this.Append(1, level, cause, format, arguments);
         }
@@ -306,40 +326,45 @@ namespace At.Pkgs.Logging
         {
             get
             {
-                LogLevel level = LogLevel.Fatal;
+                LogLevel level;
 
+                level = LogLevel.Fatal;
                 return level <= this._level;
             }
         }
 
         public void Fatal(string message)
         {
-            LogLevel level = LogLevel.Fatal;
+            LogLevel level;
 
+            level = LogLevel.Fatal;
             if (level > this._level) return;
             this.Append(1, level, null, message);
         }
 
         public void Fatal(string format, params object[] arguments)
         {
-            LogLevel level = LogLevel.Fatal;
+            LogLevel level;
 
+            level = LogLevel.Fatal;
             if (level > this._level) return;
             this.Append(1, level, null, format, arguments);
         }
 
         public void Fatal(Exception cause, string message)
         {
-            LogLevel level = LogLevel.Fatal;
+            LogLevel level;
 
+            level = LogLevel.Fatal;
             if (level > this._level) return;
             this.Append(1, level, cause, message);
         }
 
         public void Fatal(Exception cause, string format, params object[] arguments)
         {
-            LogLevel level = LogLevel.Fatal;
+            LogLevel level;
 
+            level = LogLevel.Fatal;
             if (level > this._level) return;
             this.Append(1, level, cause, format, arguments);
         }
