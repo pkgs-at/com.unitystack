@@ -185,9 +185,48 @@ namespace At.Pkgs.Logging.Sample
             this.Log.Trace("ng");
         }
 
+        /*
+         * Appenderパイプラインの例
+         */
         protected void AppenderPipeline()
         {
-            // TODO
+            Tee tee;
+            FormatAppender formatter;
+
+            LogManager.Instance.Appender =
+                new Synchronized(
+                    new Tee(
+                        new ConsoleAppender(),
+                        new NullAppender()));
+            tee = (Tee)LogManager.Instance.Appender.Unwrap(typeof(Tee));
+            if (tee == null)
+            {
+                this.Log.Fatal("failed on unwrap tee");
+                return;
+            }
+            formatter = (FormatAppender)tee[0].Unwrap(typeof(FormatAppender));
+            if (formatter != null)
+                formatter.MessageFormat = "Appender#0 {Timestamp:yyyy-MM-dd'T'HH:mm:dd.fff} {LevelName,-7} {SourceName} {Message}{NewLine}{Causes}";
+            this.Log.Notice("ConsoleAppender and NullAppender");
+            tee[1] = new Filter(
+                new ConsoleAppender(),
+                LogEntityMatchers.And(
+                    LogEntityMatchers.LevelHigherThan(LogLevel.Notice),
+                    LogEntityMatchers.SourceMatches(
+                        LogMatchers.NameMatchesPattern("At.Pkgs.Logging.Sample.*"))));
+            formatter = (FormatAppender)tee[1].Unwrap(typeof(FormatAppender));
+            if (formatter != null)
+                formatter.MessageFormat = "Appender#1 {Timestamp:yyyy-MM-dd'T'HH:mm:dd.fff} {LevelName,-7} {SourceName} {Message}{NewLine}{Causes}";
+            foreach (Appender appender in tee)
+            {
+                formatter = (FormatAppender)appender.Unwrap(typeof(FormatAppender));
+                if (formatter == null)
+                    this.Log.Fatal("failed on unwap formatter");
+                else
+                    this.Log.Notice("message format: {0}", formatter.MessageFormat);
+            }
+            this.Log.Notice("single appender");
+            this.Log.Error("multipul appenders");
         }
 
         public static void Main(string[] arguments)
