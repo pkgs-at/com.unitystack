@@ -38,16 +38,6 @@ namespace At.Pkgs.Logging.Sink
             {
                 return this._appender;
             }
-            set
-            {
-                Appender old;
-
-                if (value == null) throw new ArgumentNullException();
-                old = Interlocked.Exchange(ref this._appender, value);
-                if (old == value) return;
-                old.Flush();
-                old.Close();
-            }
         }
 
         public Appender Unwrap(Type type)
