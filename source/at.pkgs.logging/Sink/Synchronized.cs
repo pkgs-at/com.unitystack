@@ -23,17 +23,35 @@ namespace At.Pkgs.Logging.Sink
     public class Synchronized : AppenderWrapper
     {
 
+        private object _lock;
+
         public Synchronized(Appender appender)
             : base(appender)
         {
-            // do nothing
+            this._lock = new Object();
         }
 
         public override void Append(LogEntity entity)
         {
-            lock (this.Appender)
+            lock (this._lock)
             {
                 base.Append(entity);
+            }
+        }
+
+        public override void Flush()
+        {
+            lock (this._lock)
+            {
+                base.Flush();
+            }
+        }
+
+        public override void Close()
+        {
+            lock (this._lock)
+            {
+                base.Close();
             }
         }
 
