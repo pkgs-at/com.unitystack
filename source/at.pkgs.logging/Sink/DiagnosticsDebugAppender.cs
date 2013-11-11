@@ -24,47 +24,17 @@ namespace At.Pkgs.Logging.Sink
     public class DiagnosticsDebugAppender : FormatAppender
     {
 
-        private bool _useFail;
-
-        public DiagnosticsDebugAppender(bool useFail)
-        {
-            this._useFail = useFail;
-        }
-
         public DiagnosticsDebugAppender()
         {
-            this._useFail = false;
-        }
-
-        public bool UseFail
-        {
-            get
-            {
-                return this._useFail;
-            }
-            set
-            {
-                this._useFail = value;
-            }
+            // do nothing
         }
 
         protected override void Append(LogEntity entity, string formatted)
         {
             try
             {
-                switch (entity.Level)
-                {
-                    case LogLevel.Fatal:
-                    case LogLevel.Error:
-                        if (this._useFail)
-                            Debug.Fail(formatted);
-                        else
-                            Debug.Write(formatted);
-                        break;
-                    default:
-                        Debug.Write(formatted);
-                        break;
-                }
+                // cannot use Write() on UNITY Platform
+                Debug.WriteLine(formatted);
             }
             catch
             {
@@ -74,14 +44,7 @@ namespace At.Pkgs.Logging.Sink
 
         public override void Flush()
         {
-            try
-            {
-                Debug.Flush();
-            }
-            catch
-            {
-                // do nothing
-            }
+            // do nothing
         }
 
         public override void Close()
