@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "at.pkgs.logging", "at.pkgs.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "at.pkgs.logging.sample", "at.pkgs.logging.sample\at.pkgs.logging.sample.csproj", "{20E5C1FE-9BAC-48DC-9B9C-A60B70805A77}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.unitystack", "com.unitystack\com.unitystack.csproj", "{95EB5B9D-5B1E-4CB2-B014-06EC83AE8A17}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,26 @@ Global
 		{20E5C1FE-9BAC-48DC-9B9C-A60B70805A77}.UnityRelease|Mixed Platforms.Build.0 = Release|x86
 		{20E5C1FE-9BAC-48DC-9B9C-A60B70805A77}.UnityRelease|x86.ActiveCfg = Release|x86
 		{20E5C1FE-9BAC-48DC-9B9C-A60B70805A77}.UnityRelease|x86.Build.0 = Release|x86
+		{95EB5B9D-5B1E-4CB2-B014-06EC83AE8A17}.Debug|Any CPU.ActiveCfg = UnityDebug|Any CPU
+		{95EB5B9D-5B1E-4CB2-B014-06EC83AE8A17}.Debug|Any CPU.Build.0 = UnityDebug|Any CPU
+		{95EB5B9D-5B1E-4CB2-B014-06EC83AE8A17}.Debug|Mixed Platforms.ActiveCfg = UnityDebug|Any CPU
+		{95EB5B9D-5B1E-4CB2-B014-06EC83AE8A17}.Debug|Mixed Platforms.Build.0 = UnityDebug|Any CPU
+		{95EB5B9D-5B1E-4CB2-B014-06EC83AE8A17}.Debug|x86.ActiveCfg = UnityRelease|Any CPU
+		{95EB5B9D-5B1E-4CB2-B014-06EC83AE8A17}.Release|Any CPU.ActiveCfg = UnityRelease|Any CPU
+		{95EB5B9D-5B1E-4CB2-B014-06EC83AE8A17}.Release|Any CPU.Build.0 = UnityRelease|Any CPU
+		{95EB5B9D-5B1E-4CB2-B014-06EC83AE8A17}.Release|Mixed Platforms.ActiveCfg = UnityRelease|Any CPU
+		{95EB5B9D-5B1E-4CB2-B014-06EC83AE8A17}.Release|Mixed Platforms.Build.0 = UnityRelease|Any CPU
+		{95EB5B9D-5B1E-4CB2-B014-06EC83AE8A17}.Release|x86.ActiveCfg = UnityRelease|Any CPU
+		{95EB5B9D-5B1E-4CB2-B014-06EC83AE8A17}.UnityDebug|Any CPU.ActiveCfg = UnityDebug|Any CPU
+		{95EB5B9D-5B1E-4CB2-B014-06EC83AE8A17}.UnityDebug|Any CPU.Build.0 = UnityDebug|Any CPU
+		{95EB5B9D-5B1E-4CB2-B014-06EC83AE8A17}.UnityDebug|Mixed Platforms.ActiveCfg = UnityDebug|Any CPU
+		{95EB5B9D-5B1E-4CB2-B014-06EC83AE8A17}.UnityDebug|Mixed Platforms.Build.0 = UnityDebug|Any CPU
+		{95EB5B9D-5B1E-4CB2-B014-06EC83AE8A17}.UnityDebug|x86.ActiveCfg = UnityDebug|Any CPU
+		{95EB5B9D-5B1E-4CB2-B014-06EC83AE8A17}.UnityRelease|Any CPU.ActiveCfg = UnityRelease|Any CPU
+		{95EB5B9D-5B1E-4CB2-B014-06EC83AE8A17}.UnityRelease|Any CPU.Build.0 = UnityRelease|Any CPU
+		{95EB5B9D-5B1E-4CB2-B014-06EC83AE8A17}.UnityRelease|Mixed Platforms.ActiveCfg = UnityRelease|Any CPU
+		{95EB5B9D-5B1E-4CB2-B014-06EC83AE8A17}.UnityRelease|Mixed Platforms.Build.0 = UnityRelease|Any CPU
+		{95EB5B9D-5B1E-4CB2-B014-06EC83AE8A17}.UnityRelease|x86.ActiveCfg = UnityRelease|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -119,7 +119,7 @@ namespace At.Pkgs.Logging
             if (level > this._level) return;
             if (!this._manager.IsAlive) return;
             manager = (LogManager)this._manager.Target;
-            format = format == null ? "" : format;
+            format = format == null ? String.Empty : format;
             entity = new LogEntity();
             entity.Timestamp = DateTime.Now;
             if (manager.LogProcessId)

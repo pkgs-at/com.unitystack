@@ -5,32 +5,14 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{15A8CE98-68FA-490D-95C0-CE3A75CE96BF}</ProjectGuid>
+    <ProjectGuid>{95EB5B9D-5B1E-4CB2-B014-06EC83AE8A17}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>At.Pkgs.Logging</RootNamespace>
-    <AssemblyName>At.Pkgs.Logging</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <RootNamespace>UnityStack</RootNamespace>
+    <AssemblyName>UnityStack</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UnityDebug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -40,8 +22,9 @@
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>true</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UnityRelease|AnyCPU'">
     <OutputPath>bin\UnityRelease\</OutputPath>
@@ -56,34 +39,31 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEditor">
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Unity\Editor\Data\Managed\UnityEditor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Unity\Editor\Data\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Log.cs" />
-    <Compile Include="LogEntity.cs" />
-    <Compile Include="LogLevel.cs" />
-    <Compile Include="Rule\LogEntityMatcher.cs" />
-    <Compile Include="Rule\LogEntityMatchers.cs" />
-    <Compile Include="Rule\LogLevelResolver.cs" />
-    <Compile Include="Rule\LogLevelResolvers.cs" />
-    <Compile Include="Rule\LogMatcher.cs" />
-    <Compile Include="Rule\LogMatcherLevelResolver.cs" />
-    <Compile Include="Rule\LogMatchers.cs" />
-    <Compile Include="Sink\Appender.cs" />
-    <Compile Include="LogManager.cs" />
+    <Compile Include="Bootstrap.cs" />
+    <Compile Include="Logging\UnityDebugAppender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sink\AppenderWrapper.cs" />
-    <Compile Include="Sink\AutoFlush.cs" />
-    <Compile Include="Sink\CloseShield.cs" />
-    <Compile Include="Sink\ConsoleAppender.cs" />
-    <Compile Include="Sink\DiagnosticsDebugAppender.cs" />
-    <Compile Include="Sink\Filter.cs" />
-    <Compile Include="Sink\FormatAppender.cs" />
-    <Compile Include="Sink\NullAppender.cs" />
-    <Compile Include="Sink\Synchronized.cs" />
-    <Compile Include="Sink\Tee.cs" />
-    <Compile Include="Sink\WriterAppender.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\at.pkgs.logging\at.pkgs.logging.csproj">
+      <Project>{15A8CE98-68FA-490D-95C0-CE3A75CE96BF}</Project>
+      <Name>at.pkgs.logging</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Base\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>COPY /Y $(TargetDir)* $(SolutionDir)..\binary\$(ConfigurationName)\</PostBuildEvent>
