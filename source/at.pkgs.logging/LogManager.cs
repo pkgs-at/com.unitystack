@@ -66,11 +66,7 @@ namespace At.Pkgs.Logging
                 Appender old;
 
                 if (value == null) throw new ArgumentNullException();
-                lock (this)
-                {
-                    old = this._appender;
-                    this._appender = value;
-                }
+                old = Interlocked.Exchange(ref this._appender, value);
                 if (old == value) return;
                 old.Flush();
                 old.Close();

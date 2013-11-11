@@ -16,6 +16,7 @@
  */
 
 using System;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -53,11 +54,7 @@ namespace At.Pkgs.Logging.Sink
                 Appender old;
 
                 if (value == null) throw new ArgumentNullException();
-                lock (this._appenders)
-                {
-                    old = this._appenders[index];
-                    this._appenders[index] = value;
-                }
+                old = Interlocked.Exchange(ref this._appenders[index], value);
                 if (old == value) return;
                 old.Flush();
                 old.Close();
