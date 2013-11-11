@@ -94,6 +94,21 @@ namespace At.Pkgs.Logging.Sample
                 new Synchronized(
                     new ConsoleAppender());
             this.WriteLog();
+            /*
+2013-11-11T13:12:11.884 (0)-0 NOTICE  At.Pkgs.Logging.Sample.Program notice log with format
+CallStack:
+
+2013-11-11T13:12:11.885 (0)-0 ERROR   At.Pkgs.Logging.Sample.Program error log with exception
+by System.Exception: exception message
+   at At.Pkgs.Logging.Sample.Program.WriteLog() in C:\com.unitystack\source\at.pkgs.logging.sample\Program.cs:line 58
+CallStack:
+
+2013-11-11T13:12:11.886 (0)-0 FATAL   At.Pkgs.Logging.Sample.Program fatal log with exception and format
+by System.Exception: exception message
+   at At.Pkgs.Logging.Sample.Program.WriteLog() in C:\com.unitystack\source\at.pkgs.logging.sample\Program.cs:line 66
+CallStack:
+
+             */
         }
 
         /*
@@ -103,14 +118,43 @@ namespace At.Pkgs.Logging.Sample
         protected void ChangeLogManagerSettings()
         {
             this.Log.Notice("normal");
+            /*
+2013-11-11T13:12:11.887 (0)-0 NOTICE  At.Pkgs.Logging.Sample.Program normal
+CallStack:
+
+             */
             LogManager.Instance.LogProcessId = true;
             this.Log.Notice("set LogProcessId: true");
+            /*
+2013-11-11T13:12:11.887 (10812)-0 NOTICE  At.Pkgs.Logging.Sample.Program set LogProcessId: true
+CallStack:
+
+             */
             LogManager.Instance.LogManagedThreadId = true;
             this.Log.Notice("set LogManagedThreadId: true");
+            /*
+2013-11-11T13:12:11.888 (10812)-1 NOTICE  At.Pkgs.Logging.Sample.Program set LogManagedThreadId: true
+CallStack:
+
+             */
             LogManager.Instance.LogFrameDepth = 8;
             this.Log.Notice("set LogFrameDepth: 8");
+            /*
+2013-11-11T13:12:11.888 (10812)-1 NOTICE  At.Pkgs.Logging.Sample.Program set LogFrameDepth: 8
+CallStack:
+ from At.Pkgs.Logging.Sample.Program::ChangeLogManagerSettings() in :line 0
+ from At.Pkgs.Logging.Sample.Program::Main() in :line 0
+
+             */
             LogManager.Instance.LogExtendedFrame = true;
             this.Log.Notice("set LogExtendedFrame: true");
+            /*
+2013-11-11T13:12:11.888 (10812)-1 NOTICE  At.Pkgs.Logging.Sample.Program set LogExtendedFrame: true
+CallStack:
+ from At.Pkgs.Logging.Sample.Program::ChangeLogManagerSettings() in C:\com.unitystack\source\at.pkgs.logging.sample\Program.cs:line 113
+ from At.Pkgs.Logging.Sample.Program::Main() in C:\com.unitystack\source\at.pkgs.logging.sample\Program.cs:line 239
+
+             */
         }
 
         /*
@@ -130,6 +174,15 @@ namespace At.Pkgs.Logging.Sample
                     "{Timestamp:yyyy-MM-dd'T'HH:mm:dd.fff} {LevelName,-7} {SourceName} {Message}{NewLine}{Causes}";
             }
             this.WriteLog();
+            /*
+2013-11-11T13:12:11.891 NOTICE  At.Pkgs.Logging.Sample.Program notice log with format
+2013-11-11T13:12:11.892 ERROR   At.Pkgs.Logging.Sample.Program error log with exception
+by System.Exception: exception message
+   at At.Pkgs.Logging.Sample.Program.WriteLog() in C:\com.unitystack\source\at.pkgs.logging.sample\Program.cs:line 58
+2013-11-11T13:12:11.892 FATAL   At.Pkgs.Logging.Sample.Program fatal log with exception and format
+by System.Exception: exception message
+   at At.Pkgs.Logging.Sample.Program.WriteLog() in C:\com.unitystack\source\at.pkgs.logging.sample\Program.cs:line 66
+             */
         }
 
         /*
@@ -153,6 +206,9 @@ namespace At.Pkgs.Logging.Sample
             this.Log.Notice("normal");
             a.Debug("ng");
             b.Debug("ng");
+            /*
+2013-11-11T13:12:11.894 NOTICE  At.Pkgs.Logging.Sample.Program normal
+             */
             this.Log.Notice("set Debug for all(*)");
             resolvers.Add(LogLevelResolvers.LogMatches(
                 LogMatchers.NameMatchesPattern("*"),
@@ -160,6 +216,11 @@ namespace At.Pkgs.Logging.Sample
             LogManager.Instance.Update(resolvers.ToArray());
             a.Debug("ok");
             b.Debug("ok");
+            /*
+2013-11-11T13:12:11.894 NOTICE  At.Pkgs.Logging.Sample.Program set Debug for all(*)
+2013-11-11T13:12:11.896 DEBUG   At.Pkgs.Logging.Sample.SomeAction ok
+2013-11-11T13:12:11.897 DEBUG   Jp.Architector.Sample.MoreAction ok
+             */
             this.Log.Notice("set Notice for Jp.Architector.*");
             resolvers.Add(LogLevelResolvers.LogMatches(
                 LogMatchers.NameMatchesPattern("Jp.Architector.*"),
@@ -167,6 +228,10 @@ namespace At.Pkgs.Logging.Sample
             LogManager.Instance.Update(resolvers.ToArray());
             a.Debug("ok");
             b.Debug("ng");
+            /*
+2013-11-11T13:12:11.897 NOTICE  At.Pkgs.Logging.Sample.Program set Notice for Jp.Architector.*
+2013-11-11T13:12:11.897 DEBUG   At.Pkgs.Logging.Sample.SomeAction ok
+             */
             this.Log.Notice("set Trace for *Action");
             resolvers.Add(LogLevelResolvers.LogMatches(
                 LogMatchers.NameMatchesPattern("*Action"),
@@ -175,6 +240,11 @@ namespace At.Pkgs.Logging.Sample
             a.Trace("ok");
             b.Trace("ok");
             this.Log.Trace("ng");
+            /*
+2013-11-11T13:12:11.897 NOTICE  At.Pkgs.Logging.Sample.Program set Trace for *Action
+2013-11-11T13:12:11.898 TRACE   At.Pkgs.Logging.Sample.SomeAction ok
+2013-11-11T13:12:11.898 TRACE   Jp.Architector.Sample.MoreAction ok
+             */
             this.Log.Notice("set Debug for *.-reAction");
             resolvers.Add(LogLevelResolvers.LogMatches(
                 LogMatchers.NameMatchesPattern("*.-reAction"),
@@ -183,6 +253,10 @@ namespace At.Pkgs.Logging.Sample
             a.Trace("ok");
             b.Trace("ng");
             this.Log.Trace("ng");
+            /*
+2013-11-11T13:12:11.898 NOTICE  At.Pkgs.Logging.Sample.Program set Debug for *.-reAction
+2013-11-11T13:12:11.899 TRACE   At.Pkgs.Logging.Sample.SomeAction ok
+             */
         }
 
         /*
@@ -208,6 +282,9 @@ namespace At.Pkgs.Logging.Sample
             if (formatter != null)
                 formatter.MessageFormat = "Appender#0 {Timestamp:yyyy-MM-dd'T'HH:mm:dd.fff} {LevelName,-7} {SourceName} {Message}{NewLine}{Causes}";
             this.Log.Notice("ConsoleAppender and NullAppender");
+            /*
+Appender#0 2013-11-11T13:12:11.901 NOTICE  At.Pkgs.Logging.Sample.Program ConsoleAppender and NullAppender
+             */
             tee[1] = new Filter(
                 new ConsoleAppender(),
                 LogEntityMatchers.And(
@@ -225,8 +302,19 @@ namespace At.Pkgs.Logging.Sample
                 else
                     this.Log.Notice("message format: {0}", formatter.MessageFormat);
             }
+            /*
+Appender#0 2013-11-11T13:12:11.904 NOTICE  At.Pkgs.Logging.Sample.Program message format: Appender#0 {Timestamp:yyyy-MM-dd'T'HH:mm:dd.fff} {LevelName,-7} {SourceName} {Message}{NewLine}{Causes}
+Appender#0 2013-11-11T13:12:11.905 NOTICE  At.Pkgs.Logging.Sample.Program message format: Appender#1 {Timestamp:yyyy-MM-dd'T'HH:mm:dd.fff} {LevelName,-7} {SourceName} {Message}{NewLine}{Causes}
+             */
             this.Log.Notice("single appender");
+            /*
+Appender#0 2013-11-11T13:12:11.906 NOTICE  At.Pkgs.Logging.Sample.Program single appender
+             */
             this.Log.Error("multipul appenders");
+            /*
+Appender#0 2013-11-11T13:12:11.906 ERROR   At.Pkgs.Logging.Sample.Program multipul appenders
+Appender#1 2013-11-11T13:12:11.906 ERROR   At.Pkgs.Logging.Sample.Program multipul appenders
+             */
         }
 
         public static void Main(string[] arguments)
