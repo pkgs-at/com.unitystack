@@ -17,7 +17,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using At.Pkgs.Logging;
+using At.Pkgs.Logging.Configuration;
 using At.Pkgs.Logging.Rule;
 using At.Pkgs.Logging.Sink;
 
@@ -27,7 +29,17 @@ namespace At.Pkgs.Logging.Sample
     public class Program
     {
 
+        private readonly LogManager _manager;
+
         private readonly Log _log;
+
+        protected LogManager LogManager
+        {
+            get
+            {
+                return this._manager;
+            }
+        }
 
         protected Log Log
         {
@@ -42,7 +54,8 @@ namespace At.Pkgs.Logging.Sample
          */
         protected Program()
         {
-            this._log = LogManager.Instance.LogFor(this);
+            this._manager = new LogManager();
+            this._log = this.LogManager.LogFor(this);
         }
 
         /*
@@ -77,7 +90,7 @@ namespace At.Pkgs.Logging.Sample
          */
         protected void SynchronizedAutoFlushDiagnosticsDebugAppender()
         {
-            LogManager.Instance.Appender =
+            this.LogManager.Appender =
                 new AutoFlush(
                     new Synchronized(
                         new DiagnosticsDebugAppender()));
@@ -90,7 +103,7 @@ namespace At.Pkgs.Logging.Sample
          */
         protected void SynchronizedConsoleAppender()
         {
-            LogManager.Instance.Appender =
+            this.LogManager.Appender =
                 new Synchronized(
                     new ConsoleAppender());
             this.WriteLog();
@@ -123,21 +136,21 @@ CallStack:
 CallStack:
 
              */
-            LogManager.Instance.LogProcessId = true;
+            this.LogManager.LogProcessId = true;
             this.Log.Notice("set LogProcessId: true");
             /*
 2013-11-11T13:12:11.887 (10812)-0 NOTICE  At.Pkgs.Logging.Sample.Program set LogProcessId: true
 CallStack:
 
              */
-            LogManager.Instance.LogManagedThreadId = true;
+            this.LogManager.LogManagedThreadId = true;
             this.Log.Notice("set LogManagedThreadId: true");
             /*
 2013-11-11T13:12:11.888 (10812)-1 NOTICE  At.Pkgs.Logging.Sample.Program set LogManagedThreadId: true
 CallStack:
 
              */
-            LogManager.Instance.LogFrameDepth = 8;
+            this.LogManager.LogFrameDepth = 8;
             this.Log.Notice("set LogFrameDepth: 8");
             /*
 2013-11-11T13:12:11.888 (10812)-1 NOTICE  At.Pkgs.Logging.Sample.Program set LogFrameDepth: 8
@@ -146,7 +159,7 @@ CallStack:
  from At.Pkgs.Logging.Sample.Program::Main() in :line 0
 
              */
-            LogManager.Instance.LogExtendedFrame = true;
+            this.LogManager.LogExtendedFrame = true;
             this.Log.Notice("set LogExtendedFrame: true");
             /*
 2013-11-11T13:12:11.888 (10812)-1 NOTICE  At.Pkgs.Logging.Sample.Program set LogExtendedFrame: true
@@ -167,7 +180,7 @@ CallStack:
         {
             FormatAppender formatter;
 
-            formatter = (FormatAppender)LogManager.Instance.Appender.Unwrap(typeof(FormatAppender));
+            formatter = (FormatAppender)this.LogManager.Appender.Unwrap(typeof(FormatAppender));
             if (formatter != null)
             {
                 formatter.MessageFormat =
@@ -200,8 +213,8 @@ by System.Exception: exception message
             Log b;
             List<LogLevelResolver> resolvers;
 
-            a = LogManager.Instance.LogFor("At.Pkgs.Logging.Sample.SomeAction");
-            b = LogManager.Instance.LogFor("Jp.Architector.Sample.MoreAction");
+            a = this.LogManager.LogFor("At.Pkgs.Logging.Sample.SomeAction");
+            b = this.LogManager.LogFor("Jp.Architector.Sample.MoreAction");
             resolvers = new List<LogLevelResolver>();
             this.Log.Notice("normal");
             a.Debug("ng");
@@ -213,7 +226,7 @@ by System.Exception: exception message
             resolvers.Add(LogLevelResolvers.LogMatches(
                 LogMatchers.NameMatchesPattern("*"),
                 LogLevel.Debug));
-            LogManager.Instance.Update(resolvers.ToArray());
+            this.LogManager.Update(resolvers.ToArray());
             a.Debug("ok");
             b.Debug("ok");
             /*
@@ -225,7 +238,7 @@ by System.Exception: exception message
             resolvers.Add(LogLevelResolvers.LogMatches(
                 LogMatchers.NameMatchesPattern("Jp.Architector.*"),
                 LogLevel.Notice));
-            LogManager.Instance.Update(resolvers.ToArray());
+            this.LogManager.Update(resolvers.ToArray());
             a.Debug("ok");
             b.Debug("ng");
             /*
@@ -236,7 +249,7 @@ by System.Exception: exception message
             resolvers.Add(LogLevelResolvers.LogMatches(
                 LogMatchers.NameMatchesPattern("*Action"),
                 LogLevel.Trace));
-            LogManager.Instance.Update(resolvers.ToArray());
+            this.LogManager.Update(resolvers.ToArray());
             a.Trace("ok");
             b.Trace("ok");
             this.Log.Trace("ng");
@@ -249,7 +262,7 @@ by System.Exception: exception message
             resolvers.Add(LogLevelResolvers.LogMatches(
                 LogMatchers.NameMatchesPattern("*.-reAction"),
                 LogLevel.Debug));
-            LogManager.Instance.Update(resolvers.ToArray());
+            this.LogManager.Update(resolvers.ToArray());
             a.Trace("ok");
             b.Trace("ng");
             this.Log.Trace("ng");
@@ -267,12 +280,12 @@ by System.Exception: exception message
             Tee tee;
             FormatAppender formatter;
 
-            LogManager.Instance.Appender =
+            this.LogManager.Appender =
                 new Synchronized(
                     new Tee(
                         new ConsoleAppender(),
                         new NullAppender()));
-            tee = (Tee)LogManager.Instance.Appender.Unwrap(typeof(Tee));
+            tee = (Tee)this.LogManager.Appender.Unwrap(typeof(Tee));
             if (tee == null)
             {
                 this.Log.Fatal("failed on unwrap tee");
@@ -317,6 +330,36 @@ Appender#1 2013-11-11T13:12:11.906 ERROR   At.Pkgs.Logging.Sample.Program multip
              */
         }
 
+        protected void BasicLoggingConfiguration()
+        {
+            BasicLoggingConfiguration configuration;
+            Stream stream;
+
+            configuration = new BasicLoggingConfiguration(this.LogManager);
+            stream = System.IO.File.OpenRead("Logging1.xml");
+            try
+            {
+                configuration.Configure(stream);
+            }
+            finally
+            {
+                stream.Close();
+            }
+            this.Log.Debug("ng");
+            this.Log.Notice("ok");
+            stream = System.IO.File.OpenRead("Logging2.xml");
+            try
+            {
+                configuration.Configure(stream);
+            }
+            finally
+            {
+                stream.Close();
+            }
+            this.Log.Trace("ng");
+            this.Log.Debug("ok");
+        }
+
         public static void Main(string[] arguments)
         {
             Program instance;
@@ -328,6 +371,7 @@ Appender#1 2013-11-11T13:12:11.906 ERROR   At.Pkgs.Logging.Sample.Program multip
             instance.ChangeFormat();
             instance.LogLevelResolver();
             instance.AppenderPipeline();
+            instance.BasicLoggingConfiguration();
             Console.Write("press ENTER to exit...");
             Console.In.ReadLine();
         }

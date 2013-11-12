@@ -124,7 +124,7 @@ namespace At.Pkgs.Logging.Sink
             this._newLine = "\r\n";
             this.MessageFormat =
                 "{Timestamp:yyyy-MM-dd'T'HH:mm:dd.fff}" +
-                " ({ProcessId:D})-{ManagedThreadId:D} {LevelName,-7}" +
+                " ({ProcessId:D}-{ManagedThreadId:D}) {LevelName,-7}" +
                 " {SourceName} {Message}{NewLine}" +
                 "{Causes}CallStack:{NewLine}{Frames}{NewLine}";
             this.FrameFormat =

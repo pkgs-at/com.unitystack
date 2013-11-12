@@ -56,8 +56,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\BasicLoggingConfiguration.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="LogEntity.cs" />
     <Compile Include="LogLevel.cs" />

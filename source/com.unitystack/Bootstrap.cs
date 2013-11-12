@@ -33,11 +33,14 @@ namespace UnityStack
 
         private readonly Encoding _encoding;
 
+        private readonly LogManager _logManager;
+
         private string _resourcePath;
 
         protected Bootstrap()
         {
             this._encoding = new UTF8Encoding();
+            this._logManager = new LogManager();
             this._resourcePath = null;
         }
 
@@ -46,6 +49,14 @@ namespace UnityStack
             get
             {
                 return this._encoding;
+            }
+        }
+
+        public LogManager LogManager
+        {
+            get
+            {
+                return this._logManager;
             }
         }
 
@@ -75,80 +86,152 @@ namespace UnityStack
             }
             else
             {
-                return Paths.Combine(
+                path = Paths.Combine(
                     Paths.GetDirectoryName(path),
                     Paths.GetFileNameWithoutExtension(path));
+                return path.Replace(Paths.DirectorySeparatorChar, '/');
             }
         }
 
-        public string GetResourceAsString(string path)
+        public string GetResourceAsString(string path, bool throwOnError)
         {
             path = this.GetResourcePath(path);
             if (IsVirtual)
             {
-                StreamReader reader;
-
-                if (!File.Exists(path)) return null;
-                reader = new StreamReader(path, this._encoding);
-                try
+                if (!File.Exists(path))
                 {
-                    return reader.ReadToEnd();
+                    if (throwOnError)
+                        throw new FileNotFoundException("resource not found: " + path);
+                    else
+                        return null;
                 }
-                finally
-                {
-                    reader.Close();
-                }
+                return File.ReadAllText(path, this._encoding);
             }
             else
             {
                 TextAsset asset;
 
                 asset = (TextAsset)Resources.Load(path, typeof(TextAsset));
-                return asset == null ? null : asset.text;
+                if (asset == null)
+                {
+                    if (throwOnError)
+                        throw new FileNotFoundException("resource not found: " + path);
+                    else
+                        return null;
+                }
+                return asset.text;
             }
+        }
+
+        public string GetResourceAsString(string path)
+        {
+            return this.GetResourceAsString(path, false);
+        }
+
+        public byte[] GetResourceAsBytes(string path, bool throwOnError)
+        {
+            path = this.GetResourcePath(path);
+            if (IsVirtual)
+            {
+                if (!File.Exists(path))
+                {
+                    if (throwOnError)
+                        throw new FileNotFoundException("resource not found: " + path);
+                    else
+                        return null;
+                }
+                return File.ReadAllBytes(path);
+            }
+            else
+            {
+                TextAsset asset;
+
+                asset = (TextAsset)Resources.Load(path, typeof(TextAsset));
+                if (asset == null)
+                {
+                    if (throwOnError)
+                        throw new FileNotFoundException("resource not found: " + path);
+                    else
+                        return null;
+                }
+                return asset.bytes;
+            }
+        }
+
+        public byte[] GetResourceAsBytes(string path)
+        {
+            return this.GetResourceAsBytes(path, false);
+        }
+
+        public Stream GetResourceAsStream(string path, bool throwOnError)
+        {
+            path = this.GetResourcePath(path);
+            if (IsVirtual)
+            {
+                if (!File.Exists(path))
+                {
+                    if (throwOnError)
+                        throw new FileNotFoundException("resource not found: " + path);
+                    else
+                        return null;
+                }
+                return File.OpenRead(path);
+            }
+            else
+            {
+                TextAsset asset;
+
+                asset = (TextAsset)Resources.Load(path, typeof(TextAsset));
+                if (asset == null)
+                {
+                    if (throwOnError)
+                        throw new FileNotFoundException("resource not found: " + path);
+                    else
+                        return null;
+                }
+                return new MemoryStream(asset.bytes, false);
+            }
+        }
+
+        public Stream GetResourceAsStream(string path)
+        {
+            return this.GetResourceAsStream(path, false);
         }
 
         protected virtual void Initialize(LogManager manager)
         {
-            LogLevel level;
+            UnityLoggingConfiguration configuration;
+            Stream stream;
 
-            if (this.IsVirtual)
+            configuration = new UnityLoggingConfiguration(manager);
+            stream = this.GetResourceAsStream("BaseSettings/Logging.xml", true);
+            try
             {
-                // TODO setup with configuration file
-                manager.Appender = new Synchronized(new ConsoleAppender());
-                level = LogLevel.Debug;
+                configuration.Configure(stream);
             }
-            else
+            finally
             {
-                manager.Appender = new UnityDebugAppender();
-                level = LogLevel.Notice;
+                stream.Close();
             }
-            manager.LogProcessId = true;
-            manager.LogManagedThreadId = true;
-            manager.LogFrameDepth = 4;
-            manager.LogExtendedFrame = true;
-            manager.Update(new LogLevelResolver[] {
-                LogLevelResolvers.LogMatches(
-                    LogMatchers.NameMatchesPattern("*"),
-                    level)
-            });
+            stream = this.GetResourceAsStream("LocalSettings/Logging.xml", false);
+            if (stream == null) return;
+            try
+            {
+                configuration.Configure(stream);
+            }
+            finally
+            {
+                stream.Close();
+            }
         }
 
         protected virtual void Intialize()
         {
             this._resourcePath = Bootstrap._path;
-            this.Initialize(LogManager.Instance);
+            this.Initialize(this._logManager);
         }
 
         // TODO abstract methods
-
-        public LogManager LogManager
-        {
-            get
-            {
-                return LogManager.Instance;
-            }
-        }
 
         private static readonly object _lock;
 

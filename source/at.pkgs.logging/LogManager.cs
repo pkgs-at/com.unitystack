@@ -43,7 +43,7 @@ namespace At.Pkgs.Logging
 
         private ReaderWriterLock _lock;
 
-        private LogManager()
+        public LogManager()
         {
             this._appender = new NullAppender();
             this._resolvers = new LogLevelResolver[0];
@@ -70,6 +70,14 @@ namespace At.Pkgs.Logging
                 if (old == value) return;
                 old.Flush();
                 old.Close();
+            }
+        }
+
+        public LogLevelResolver[] LogLevelResolvers
+        {
+            get
+            {
+                return (LogLevelResolver[])this._resolvers.Clone();
             }
         }
 
@@ -220,8 +228,6 @@ namespace At.Pkgs.Logging
             if (target == null) throw new ArgumentNullException();
             return this.LogFor(target.GetType().FullName);
         }
-
-        public static readonly LogManager Instance = new LogManager();
 
     }
 

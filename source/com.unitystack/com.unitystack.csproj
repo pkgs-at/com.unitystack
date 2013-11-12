@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="Bootstrap.cs" />
     <Compile Include="Logging\UnityDebugAppender.cs" />
+    <Compile Include="Logging\UnityLoggingConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<BasicLoggingConfiguration>
+  <LogProcessId value="true"/>
+  <LogManagedThreadId value="true"/>
+  <LogFrameDepth value="8"/>
+  <LogExtendedFrame value="true"/>
+  <Appender>
+    <Pipeline>
+      <Synchronized>
+        <AutoFlush>
+          <CloseShield>
+            <Instance key1="ValueA" key2="ValueB">ConsoleAppender</Instance>
+          </CloseShield>
+        </AutoFlush>
+      </Synchronized>
+    </Pipeline>
+    <Format>
+      <NewLine>
+        <CarriageReturn/>
+        <LineFeed/>
+      </NewLine>
+      <Message>
+        {Timestamp:yyyy-MM-dd'T'HH:mm:dd.fff}<Space/>
+        ({ProcessId}-{ManagedThreadId:D}) {LevelName,-7} {SourceName} {Message}{NewLine}
+        Exception:{NewLine}
+        {Causes}
+        CallStack:{NewLine}
+        {Frames}
+      </Message>
+      <Frame>
+        from {TypeFullName}::{MethodName}()<Space/>
+        in {FileName}:line {FileLineNumber}{NewLine}
+      </Frame>
+      <Cause>
+        by {TypeFullName}: {Message}{NewLine}
+        {StackTrace}{NewLine}
+      </Cause>
+    </Format>
+  </Appender>
+  <Log reset="true">
+    <Pattern matches="*" level="debug"/>
+  </Log>
+</BasicLoggingConfiguration>
