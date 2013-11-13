@@ -21,7 +21,7 @@ using System.Collections;
 namespace UnityStack
 {
 
-    public interface Future<ResultType>
+    public interface Future
     {
 
         bool IsCancelled
@@ -37,6 +37,11 @@ namespace UnityStack
         IEnumerator Poll();
 
         void Cancel();
+
+    }
+
+    public interface Future<ResultType> : Future
+    {
 
         ResultType Get();
 

@@ -21,13 +21,11 @@ using System.Collections;
 namespace UnityStack
 {
 
-    public class FutureTask<
-        ResultType>
-        : Future<ResultType>
+    public class FutureTask : Future
     {
 
         public delegate IEnumerator Task(
-            FutureTask<ResultType> future);
+            FutureTask future);
 
         private readonly Task _task;
 
@@ -35,19 +33,16 @@ namespace UnityStack
 
         private bool _cancelled;
 
-        private bool _resulted;
+        private bool _completed;
 
         private bool _done;
-
-        private ResultType _result;
 
         protected internal FutureTask()
         {
             this._cancelling = false;
             this._cancelled = false;
-            this._resulted = false;
+            this._completed = false;
             this._done = false;
-            this._result = default(ResultType);
         }
 
         public FutureTask(
@@ -57,9 +52,8 @@ namespace UnityStack
             this._task = task;
             this._cancelling = false;
             this._cancelled = false;
-            this._resulted = false;
+            this._completed = false;
             this._done = false;
-            this._result = default(ResultType);
         }
 
         public bool IsCancelling
@@ -86,17 +80,19 @@ namespace UnityStack
             }
         }
 
+        public virtual void Completed()
+        {
+            this._completed = true;
+        }
+
         protected internal virtual IEnumerator Start()
         {
             return this._task(this);
         }
 
-        public void Set(ResultType result)
+        protected internal virtual bool Complete()
         {
-            if (this._resulted)
-                throw new InvalidProgramException("already result set");
-            this._resulted = true;
-            this._result = result;
+            return this._completed;
         }
 
         public IEnumerator Poll()
@@ -109,22 +105,32 @@ namespace UnityStack
                 object message;
 
                 message = enumerator.Current;
-                // TODO dispatch message and maybe continue... sub task
+                if (message is Future)
+                {
+                    Future future;
+                    IEnumerator inner;
+                    bool cancelled;
+
+                    future = (Future)message;
+                    inner = future.Poll();
+                    cancelled = false;
+                    while (inner.MoveNext())
+                    {
+                        if (this._cancelling && !cancelled)
+                        {
+                            future.Cancel();
+                            cancelled = true;
+                        }
+                        yield return inner.Current;
+                    }
+                    continue;
+                }
+                yield return message;
             }
-            if (this._cancelling)
-            {
-                if (this._resulted)
-                    this._done = true;
-                else
-                    this._cancelled = true;
-            }
+            if (this.Complete())
+                this._done = true;
             else
-            {
-                if (this._resulted)
-                    this._done = true;
-                else
-                    throw new InvalidProgramException("result not set");
-            }
+                this._cancelled = true;
             yield break;
         }
 
@@ -133,9 +139,67 @@ namespace UnityStack
             this._cancelling = true;
         }
 
+    }
+
+    public class FutureTask<
+        ResultType>
+        : FutureTask, Future<ResultType>
+    {
+
+        public new delegate IEnumerator Task(
+            FutureTask<ResultType> future);
+
+        private readonly Task _task;
+
+        private bool _resulted;
+
+        private ResultType _result;
+
+        protected internal FutureTask()
+            : base()
+        {
+            this._resulted = false;
+            this._result = default(ResultType);
+        }
+
+        public FutureTask(
+            Task task)
+            : base()
+        {
+            if (task == null) throw new ArgumentNullException();
+            this._task = task;
+            this._resulted = false;
+            this._result = default(ResultType);
+        }
+
+        protected internal override IEnumerator Start()
+        {
+            return this._task(this);
+        }
+
+        public override void Completed()
+        {
+            throw new NotSupportedException("use Set(ResultType result) instead of Completed()");
+        }
+
+        public void Set(ResultType result)
+        {
+            if (this._resulted)
+                throw new InvalidProgramException("already result set");
+            this._resulted = true;
+            this._result = result;
+        }
+
+        protected internal override bool Complete()
+        {
+            if (!this._resulted && !this.IsCancelling)
+                throw new InvalidProgramException("result not set");
+            return this._resulted;
+        }
+
         public ResultType Get()
         {
-            if (!this._done)
+            if (!this.IsDone)
                 throw new InvalidProgramException("not done, maybe cancelled");
             return this._result;
         }
