@@ -21,11 +21,13 @@ using System.Collections;
 namespace UnityStack
 {
 
-    public class FutureTask : Future
+    public class FutureTask<
+        ResultType>
+        : Future<ResultType>
     {
 
         public delegate IEnumerator Task(
-            FutureTask future);
+            FutureTask<ResultType> future);
 
         private readonly Task _task;
 
@@ -33,16 +35,19 @@ namespace UnityStack
 
         private bool _cancelled;
 
-        private bool _completed;
+        private bool _resulted;
 
         private bool _done;
+
+        private ResultType _result;
 
         protected internal FutureTask()
         {
             this._cancelling = false;
             this._cancelled = false;
-            this._completed = false;
+            this._resulted = false;
             this._done = false;
+            this._result = default(ResultType);
         }
 
         public FutureTask(
@@ -52,8 +57,9 @@ namespace UnityStack
             this._task = task;
             this._cancelling = false;
             this._cancelled = false;
-            this._completed = false;
+            this._resulted = false;
             this._done = false;
+            this._result = default(ResultType);
         }
 
         public bool IsCancelling
@@ -80,19 +86,17 @@ namespace UnityStack
             }
         }
 
-        public virtual void Completed()
-        {
-            this._completed = true;
-        }
-
         protected internal virtual IEnumerator Start()
         {
             return this._task(this);
         }
 
-        protected internal virtual bool Complete()
+        public void Set(ResultType result)
         {
-            return this._completed;
+            if (this._resulted)
+                throw new InvalidProgramException("already result set");
+            this._resulted = true;
+            this._result = result;
         }
 
         public IEnumerator Poll()
@@ -127,7 +131,9 @@ namespace UnityStack
                 }
                 yield return message;
             }
-            if (this.Complete())
+            if (!this._resulted && !this._cancelling)
+                throw new InvalidProgramException("result not set");
+            if (this._resulted)
                 this._done = true;
             else
                 this._cancelled = true;
@@ -139,67 +145,9 @@ namespace UnityStack
             this._cancelling = true;
         }
 
-    }
-
-    public class FutureTask<
-        ResultType>
-        : FutureTask, Future<ResultType>
-    {
-
-        public new delegate IEnumerator Task(
-            FutureTask<ResultType> future);
-
-        private readonly Task _task;
-
-        private bool _resulted;
-
-        private ResultType _result;
-
-        protected internal FutureTask()
-            : base()
-        {
-            this._resulted = false;
-            this._result = default(ResultType);
-        }
-
-        public FutureTask(
-            Task task)
-            : base()
-        {
-            if (task == null) throw new ArgumentNullException();
-            this._task = task;
-            this._resulted = false;
-            this._result = default(ResultType);
-        }
-
-        protected internal override IEnumerator Start()
-        {
-            return this._task(this);
-        }
-
-        public override void Completed()
-        {
-            throw new NotSupportedException("use Set(ResultType result) instead of Completed()");
-        }
-
-        public void Set(ResultType result)
-        {
-            if (this._resulted)
-                throw new InvalidProgramException("already result set");
-            this._resulted = true;
-            this._result = result;
-        }
-
-        protected internal override bool Complete()
-        {
-            if (!this._resulted && !this.IsCancelling)
-                throw new InvalidProgramException("result not set");
-            return this._resulted;
-        }
-
         public ResultType Get()
         {
-            if (!this.IsDone)
+            if (!this._done)
                 throw new InvalidProgramException("not done, maybe cancelled");
             return this._result;
         }
