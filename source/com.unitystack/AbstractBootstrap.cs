@@ -28,7 +28,7 @@ using UnityStack.Logging;
 namespace UnityStack
 {
 
-    public abstract class Bootstrap
+    public abstract class AbstractBootstrap
     {
 
         private readonly Encoding _encoding;
@@ -37,7 +37,7 @@ namespace UnityStack
 
         private string _resourcePath;
 
-        protected Bootstrap()
+        protected AbstractBootstrap()
         {
             this._encoding = new UTF8Encoding();
             this._logManager = new LogManager();
@@ -203,7 +203,7 @@ namespace UnityStack
             UnityLoggingConfiguration configuration;
             Stream stream;
 
-            configuration = new UnityLoggingConfiguration(manager);
+            configuration = new UnityLoggingConfiguration(manager, this.ResourcePath);
             stream = this.GetResourceAsStream("BaseSettings/Logging.xml", true);
             try
             {
@@ -227,40 +227,38 @@ namespace UnityStack
 
         protected virtual void Intialize()
         {
-            this._resourcePath = Bootstrap._path;
+            this._resourcePath = AbstractBootstrap._path;
             this.Initialize(this._logManager);
         }
-
-        // TODO abstract methods
 
         private static readonly object _lock;
 
         private static string _path;
 
-        private static Bootstrap _instance;
+        private static AbstractBootstrap _instance;
 
-        static Bootstrap()
+        static AbstractBootstrap()
         {
-            Bootstrap._lock = new System.Object();
-            Bootstrap._path = null;
-            Bootstrap._instance = null;
+            AbstractBootstrap._lock = new System.Object();
+            AbstractBootstrap._path = null;
+            AbstractBootstrap._instance = null;
         }
 
         public static string Path
         {
             get
             {
-                return Bootstrap._path;
+                return AbstractBootstrap._path;
             }
             set
             {
-                Bootstrap._path = value;
+                AbstractBootstrap._path = value;
             }
         }
 
         public virtual Type GetType(string name)
         {
-            return Bootstrap.GetTypeInternal(name);
+            return AbstractBootstrap.GetTypeInternal(name);
         }
 
         private static Type GetTypeInternal(string name)
@@ -280,24 +278,27 @@ namespace UnityStack
         {
             Type target;
 
-            target = Bootstrap.GetTypeInternal("Core.CoreBootstrap");
-            if (!typeof(Bootstrap).IsAssignableFrom(target))
+            target = AbstractBootstrap.GetTypeInternal("Bootstrap");
+            if (!typeof(AbstractBootstrap).IsAssignableFrom(target))
                 throw new TypeLoadException(
-                    "Core.CoreBootstrap is not instance of Bootstrap");
-            Bootstrap._instance = (Bootstrap)Activator.CreateInstance(target);
-            Bootstrap._instance.Intialize();
+                    "Bootstrap is not instance of AbstractBootstrap");
+            AbstractBootstrap._instance = (AbstractBootstrap)Activator.CreateInstance(target);
+            AbstractBootstrap._instance.Intialize();
         }
 
-        public static Bootstrap Instance
+        public static AbstractBootstrap Instance
         {
             get
             {
-                lock (Bootstrap._lock)
+                if (AbstractBootstrap._instance == null)
                 {
-                    if (Bootstrap._instance == null)
-                        Bootstrap.Boot();
+                    lock (AbstractBootstrap._lock)
+                    {
+                        if (AbstractBootstrap._instance == null)
+                            AbstractBootstrap.Boot();
+                    }
                 }
-                return Bootstrap._instance;
+                return AbstractBootstrap._instance;
             }
         }
 

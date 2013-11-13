@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "at.pkgs.logging.sample", "a
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.unitystack", "com.unitystack\com.unitystack.csproj", "{95EB5B9D-5B1E-4CB2-B014-06EC83AE8A17}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.unitystack.container.sample", "com.unitystack.container.sample\com.unitystack.container.sample.csproj", "{C907DA85-3A3F-4289-95E9-263F5CC79C7E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,26 @@ Global
 		{95EB5B9D-5B1E-4CB2-B014-06EC83AE8A17}.UnityRelease|Mixed Platforms.ActiveCfg = UnityRelease|Any CPU
 		{95EB5B9D-5B1E-4CB2-B014-06EC83AE8A17}.UnityRelease|Mixed Platforms.Build.0 = UnityRelease|Any CPU
 		{95EB5B9D-5B1E-4CB2-B014-06EC83AE8A17}.UnityRelease|x86.ActiveCfg = UnityRelease|Any CPU
+		{C907DA85-3A3F-4289-95E9-263F5CC79C7E}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{C907DA85-3A3F-4289-95E9-263F5CC79C7E}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{C907DA85-3A3F-4289-95E9-263F5CC79C7E}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{C907DA85-3A3F-4289-95E9-263F5CC79C7E}.Debug|x86.ActiveCfg = Debug|x86
+		{C907DA85-3A3F-4289-95E9-263F5CC79C7E}.Debug|x86.Build.0 = Debug|x86
+		{C907DA85-3A3F-4289-95E9-263F5CC79C7E}.Release|Any CPU.ActiveCfg = Release|x86
+		{C907DA85-3A3F-4289-95E9-263F5CC79C7E}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{C907DA85-3A3F-4289-95E9-263F5CC79C7E}.Release|Mixed Platforms.Build.0 = Release|x86
+		{C907DA85-3A3F-4289-95E9-263F5CC79C7E}.Release|x86.ActiveCfg = Release|x86
+		{C907DA85-3A3F-4289-95E9-263F5CC79C7E}.Release|x86.Build.0 = Release|x86
+		{C907DA85-3A3F-4289-95E9-263F5CC79C7E}.UnityDebug|Any CPU.ActiveCfg = Debug|x86
+		{C907DA85-3A3F-4289-95E9-263F5CC79C7E}.UnityDebug|Mixed Platforms.ActiveCfg = Debug|x86
+		{C907DA85-3A3F-4289-95E9-263F5CC79C7E}.UnityDebug|Mixed Platforms.Build.0 = Debug|x86
+		{C907DA85-3A3F-4289-95E9-263F5CC79C7E}.UnityDebug|x86.ActiveCfg = Debug|x86
+		{C907DA85-3A3F-4289-95E9-263F5CC79C7E}.UnityDebug|x86.Build.0 = Debug|x86
+		{C907DA85-3A3F-4289-95E9-263F5CC79C7E}.UnityRelease|Any CPU.ActiveCfg = Release|x86
+		{C907DA85-3A3F-4289-95E9-263F5CC79C7E}.UnityRelease|Mixed Platforms.ActiveCfg = Release|x86
+		{C907DA85-3A3F-4289-95E9-263F5CC79C7E}.UnityRelease|Mixed Platforms.Build.0 = Release|x86
+		{C907DA85-3A3F-4289-95E9-263F5CC79C7E}.UnityRelease|x86.ActiveCfg = Release|x86
+		{C907DA85-3A3F-4289-95E9-263F5CC79C7E}.UnityRelease|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

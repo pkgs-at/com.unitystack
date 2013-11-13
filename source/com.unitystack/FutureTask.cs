@@ -35,6 +35,8 @@ namespace UnityStack
 
         private bool _cancelled;
 
+        private bool _resulted;
+
         private bool _done;
 
         private ResultType _result;
@@ -43,6 +45,7 @@ namespace UnityStack
         {
             this._cancelling = false;
             this._cancelled = false;
+            this._resulted = false;
             this._done = false;
             this._result = default(ResultType);
         }
@@ -54,6 +57,7 @@ namespace UnityStack
             this._task = task;
             this._cancelling = false;
             this._cancelled = false;
+            this._resulted = false;
             this._done = false;
             this._result = default(ResultType);
         }
@@ -87,6 +91,14 @@ namespace UnityStack
             return this._task(this);
         }
 
+        public void Set(ResultType result)
+        {
+            if (this._resulted)
+                throw new InvalidProgramException("already result set");
+            this._resulted = true;
+            this._result = result;
+        }
+
         public IEnumerator Poll()
         {
             IEnumerator enumerator;
@@ -97,7 +109,21 @@ namespace UnityStack
                 object message;
 
                 message = enumerator.Current;
-                // TODO dispatch message and maybe continue
+                // TODO dispatch message and maybe continue... sub task
+            }
+            if (this._cancelling)
+            {
+                if (this._resulted)
+                    this._done = true;
+                else
+                    this._cancelled = true;
+            }
+            else
+            {
+                if (this._resulted)
+                    this._done = true;
+                else
+                    throw new InvalidProgramException("result not set");
             }
             yield break;
         }
@@ -110,7 +136,7 @@ namespace UnityStack
         public ResultType Get()
         {
             if (!this._done)
-                throw new InvalidProgramException();
+                throw new InvalidProgramException("not done, maybe cancelled");
             return this._result;
         }
 
@@ -123,7 +149,7 @@ namespace UnityStack
     {
 
         public new delegate IEnumerator Task(
-            FutureTask<ResultType> task,
+            FutureTask<ResultType> future,
             ParameterType1 parameter1);
 
         private Task _task;
@@ -157,7 +183,7 @@ namespace UnityStack
     {
 
         public new delegate IEnumerator Task(
-            FutureTask<ResultType> task,
+            FutureTask<ResultType> future,
             ParameterType1 parameter1,
             ParameterType2 parameter2);
 
@@ -198,7 +224,7 @@ namespace UnityStack
     {
 
         public new delegate IEnumerator Task(
-            FutureTask<ResultType> task,
+            FutureTask<ResultType> future,
             ParameterType1 parameter1,
             ParameterType2 parameter2,
             ParameterType3 parameter3);
@@ -246,7 +272,7 @@ namespace UnityStack
     {
 
         public new delegate IEnumerator Task(
-            FutureTask<ResultType> task,
+            FutureTask<ResultType> future,
             ParameterType1 parameter1,
             ParameterType2 parameter2,
             ParameterType3 parameter3,
@@ -300,7 +326,7 @@ namespace UnityStack
     {
 
         public new delegate IEnumerator Task(
-            FutureTask<ResultType> task,
+            FutureTask<ResultType> future,
             ParameterType1 parameter1,
             ParameterType2 parameter2,
             ParameterType3 parameter3,
@@ -362,7 +388,7 @@ namespace UnityStack
     {
 
         public new delegate IEnumerator Task(
-            FutureTask<ResultType> task,
+            FutureTask<ResultType> future,
             ParameterType1 parameter1,
             ParameterType2 parameter2,
             ParameterType3 parameter3,
@@ -431,7 +457,7 @@ namespace UnityStack
     {
 
         public new delegate IEnumerator Task(
-            FutureTask<ResultType> task,
+            FutureTask<ResultType> future,
             ParameterType1 parameter1,
             ParameterType2 parameter2,
             ParameterType3 parameter3,
@@ -507,7 +533,7 @@ namespace UnityStack
     {
 
         public new delegate IEnumerator Task(
-            FutureTask<ResultType> task,
+            FutureTask<ResultType> future,
             ParameterType1 parameter1,
             ParameterType2 parameter2,
             ParameterType3 parameter3,
@@ -590,7 +616,7 @@ namespace UnityStack
     {
 
         public new delegate IEnumerator Task(
-            FutureTask<ResultType> task,
+            FutureTask<ResultType> future,
             ParameterType1 parameter1,
             ParameterType2 parameter2,
             ParameterType3 parameter3,
@@ -680,7 +706,7 @@ namespace UnityStack
     {
 
         public new delegate IEnumerator Task(
-            FutureTask<ResultType> task,
+            FutureTask<ResultType> future,
             ParameterType1 parameter1,
             ParameterType2 parameter2,
             ParameterType3 parameter3,
@@ -777,7 +803,7 @@ namespace UnityStack
     {
 
         public new delegate IEnumerator Task(
-            FutureTask<ResultType> task,
+            FutureTask<ResultType> future,
             ParameterType1 parameter1,
             ParameterType2 parameter2,
             ParameterType3 parameter3,
@@ -881,7 +907,7 @@ namespace UnityStack
     {
 
         public new delegate IEnumerator Task(
-            FutureTask<ResultType> task,
+            FutureTask<ResultType> future,
             ParameterType1 parameter1,
             ParameterType2 parameter2,
             ParameterType3 parameter3,
@@ -992,7 +1018,7 @@ namespace UnityStack
     {
 
         public new delegate IEnumerator Task(
-            FutureTask<ResultType> task,
+            FutureTask<ResultType> future,
             ParameterType1 parameter1,
             ParameterType2 parameter2,
             ParameterType3 parameter3,
@@ -1110,7 +1136,7 @@ namespace UnityStack
     {
 
         public new delegate IEnumerator Task(
-            FutureTask<ResultType> task,
+            FutureTask<ResultType> future,
             ParameterType1 parameter1,
             ParameterType2 parameter2,
             ParameterType3 parameter3,
@@ -1235,7 +1261,7 @@ namespace UnityStack
     {
 
         public new delegate IEnumerator Task(
-            FutureTask<ResultType> task,
+            FutureTask<ResultType> future,
             ParameterType1 parameter1,
             ParameterType2 parameter2,
             ParameterType3 parameter3,
@@ -1367,7 +1393,7 @@ namespace UnityStack
     {
 
         public new delegate IEnumerator Task(
-            FutureTask<ResultType> task,
+            FutureTask<ResultType> future,
             ParameterType1 parameter1,
             ParameterType2 parameter2,
             ParameterType3 parameter3,

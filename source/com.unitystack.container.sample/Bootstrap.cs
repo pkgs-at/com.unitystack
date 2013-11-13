@@ -16,37 +16,38 @@
  */
 
 using System;
-using System.Collections.Specialized;
 using At.Pkgs.Logging;
-using At.Pkgs.Logging.Configuration;
+using UnityStack;
+using Core;
 
-namespace UnityStack.Logging
+public class Bootstrap : AbstractBootstrap
 {
 
-    public class UnityLoggingConfiguration : BasicLoggingConfiguration
+    private RootDomain _rootDomain;
+
+    protected override void Intialize()
     {
+        base.Intialize();
+        this._rootDomain = new RootDomain();
+        this._rootDomain.Initialize(
+            this.GetResourceAsStream("BaseSettings/RootDomain.xml", true),
+            this.GetResourceAsStream("LocalSettings/RootDomain.xml", false));
+    }
 
-        private string _root;
-
-        public UnityLoggingConfiguration(LogManager manager, String root)
-            : base(manager)
+    public RootDomain RootDomain
+    {
+        get
         {
-            this._root = root;
+            return this._rootDomain;
         }
+    }
 
-        public override At.Pkgs.Logging.Sink.Appender CreateAppender(
-            string name,
-            NameValueCollection parameters)
+    public static new Bootstrap Instance
+    {
+        get
         {
-            switch (name)
-            {
-                case "UnityDebugAppender":
-                    return new UnityDebugAppender();
-                default:
-                    return base.CreateAppender(name, parameters);
-            }
+            return (Bootstrap)AbstractBootstrap.Instance;
         }
-
     }
 
 }

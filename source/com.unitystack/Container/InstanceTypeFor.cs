@@ -16,35 +16,44 @@
  */
 
 using System;
-using System.Collections.Specialized;
-using At.Pkgs.Logging;
-using At.Pkgs.Logging.Configuration;
 
-namespace UnityStack.Logging
+namespace UnityStack.Container
 {
 
-    public class UnityLoggingConfiguration : BasicLoggingConfiguration
+    public class InstanceTypeFor
     {
 
-        private string _root;
+        private readonly Type _type;
 
-        public UnityLoggingConfiguration(LogManager manager, String root)
-            : base(manager)
+        private readonly string[] _names;
+
+        public InstanceTypeFor(Type type, params string[] names)
         {
-            this._root = root;
+            this._type = type;
+            this._names = names;
         }
 
-        public override At.Pkgs.Logging.Sink.Appender CreateAppender(
-            string name,
-            NameValueCollection parameters)
+        public Type Type
         {
-            switch (name)
+            get
             {
-                case "UnityDebugAppender":
-                    return new UnityDebugAppender();
-                default:
-                    return base.CreateAppender(name, parameters);
+                return this._type;
             }
+        }
+
+        public string[] Names
+        {
+            get
+            {
+                return this._names;
+            }
+        }
+
+        public bool Matches(string name)
+        {
+            foreach (string checkee in this._names)
+                if (checkee.Equals(name)) return true;
+            return false;
         }
 
     }
