@@ -49,6 +49,19 @@ namespace UnityStack
 
     }
 
+    public enum FutureProcess
+    {
+
+        Unhandled,
+
+        Continue,
+
+        YieldBreak,
+
+        Terminate
+
+    }
+
     public interface FutureExceptionEvent
     {
 
@@ -62,11 +75,11 @@ namespace UnityStack
             get;
         }
 
-        void Bubble();
+        FutureProcess Bubble();
 
     }
 
-    public delegate void FutureExceptionEventHandler(
+    public delegate FutureProcess FutureExceptionEventHandler(
         FutureExceptionEvent @event);
 
 }

@@ -122,10 +122,13 @@ namespace UnityStack
             this._result = result;
         }
 
-        protected bool TrappedMoveNext(IEnumerator enumerator)
+        protected bool TrappedMoveNext(
+            IEnumerator enumerator,
+            out FutureProcess process)
         {
             try
             {
+                process = FutureProcess.Unhandled;
                 return enumerator.MoveNext();
             }
             catch (Exception throwable)
@@ -137,14 +140,24 @@ namespace UnityStack
                     chain = this._onErrorHandlerChain;
                 }
                 if (chain == null) throw;
-                chain.Apply(this, throwable);
-                throw new HandledFutureException();
+                process = chain.Apply(this, throwable);
+                switch (process)
+                {
+                    case FutureProcess.Continue:
+                    case FutureProcess.YieldBreak:
+                        return true;
+                    case FutureProcess.Terminate:
+                        throw new HandledFutureException();
+                    default:
+                        throw;
+                }
             }
         }
 
         public IEnumerator Poll()
         {
             IEnumerator enumerator;
+            FutureProcess process;
 
             if (this._cancelling)
             {
@@ -152,10 +165,12 @@ namespace UnityStack
                 yield break;
             }
             enumerator = this.Start();
-            while (this.TrappedMoveNext(enumerator))
+            while (this.TrappedMoveNext(enumerator, out process))
             {
                 object message;
 
+                if (process == FutureProcess.Continue) continue;
+                if (process == FutureProcess.YieldBreak) yield break;
                 message = enumerator.Current;
                 if (message is Future)
                 {
@@ -171,8 +186,10 @@ namespace UnityStack
                         cancelled = true;
                     }
                     inner = future.Poll();
-                    while (this.TrappedMoveNext(inner))
+                    while (this.TrappedMoveNext(inner, out process))
                     {
+                        if (process == FutureProcess.Continue) break;
+                        if (process == FutureProcess.YieldBreak) yield break;
                         yield return inner.Current;
                         if (this._cancelling && !cancelled)
                         {

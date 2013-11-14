@@ -59,11 +59,10 @@ namespace UnityStack
                 }
             }
 
-            public void Bubble()
+            public FutureProcess Bubble()
             {
-                if (this._next == null)
-                    throw new UnhandledFutureException(this._future, this._exception);
-                this._next.Apply(this._future, this._exception);
+                if (this._next == null) return FutureProcess.Unhandled;
+                return this._next.Apply(this._future, this._exception);
             }
 
         }
@@ -80,9 +79,9 @@ namespace UnityStack
             this._next = next;
         }
 
-        internal void Apply(Future future, Exception exception)
+        internal FutureProcess Apply(Future future, Exception exception)
         {
-            this._handler(new FutureExceptionEventHandlerChain.Event(
+            return this._handler(new FutureExceptionEventHandlerChain.Event(
                 future,
                 exception,
                 this._next));
