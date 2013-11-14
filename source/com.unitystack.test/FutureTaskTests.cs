@@ -557,12 +557,13 @@ namespace UnityStack.Test
         }
 
         protected IEnumerator ContinuesInternal(
-            FutureTask<int> future,
+            FutureTask<bool> future,
+            int depth,
             Type exception)
         {
             Future<bool> inner;
 
-            inner = this.Throws(exception);
+            inner = depth <= 0 ? this.Throws(exception) : this.ThrowsWrapper(depth - 1, exception);
             inner.FutureException += delegate(FutureExceptionEvent @event)
             {
                 Assert.IsType(exception, @event.Exception);
@@ -570,29 +571,31 @@ namespace UnityStack.Test
                 return FutureProcess.Continue;
             };
             yield return inner;
-            future.Set(1);
+            future.Set(true);
             yield break;
         }
 
-        protected Future<int> Continues(
+        protected Future<bool> Continues(
+            int depth,
             Type exception)
         {
-            return new FutureTask<int, Type>(
+            return new FutureTask<bool, int, Type>(
                 this.ContinuesInternal,
+                depth,
                 exception);
         }
 
         [Fact]
         public void Continue()
         {
-            Future<int> future;
+            Future<bool> future;
             IEnumerator enumerator;
             bool handler1;
             bool handler2;
 
             handler1 = false;
             handler2 = false;
-            future = this.Continues(typeof(ArithmeticException));
+            future = this.Continues(0, typeof(ArithmeticException));
             future.FutureException += delegate(FutureExceptionEvent @event)
             {
                 handler1 = true;
@@ -609,7 +612,75 @@ namespace UnityStack.Test
             };
             enumerator = future.Poll();
             Assert.False(enumerator.MoveNext());
-            Assert.Equal(1, future.Get());
+            Assert.Equal(true, future.Get());
+            Assert.True(future.IsDone);
+            Assert.False(future.IsCancelled);
+            Assert.False(handler1);
+            Assert.False(handler2);
+        }
+
+        [Fact]
+        public void ContinueStacked1()
+        {
+            Future<bool> future;
+            IEnumerator enumerator;
+            bool handler1;
+            bool handler2;
+
+            handler1 = false;
+            handler2 = false;
+            future = this.Continues(1, typeof(ArithmeticException));
+            future.FutureException += delegate(FutureExceptionEvent @event)
+            {
+                handler1 = true;
+                Assert.IsType(typeof(ArgumentException), @event.Exception);
+                Assert.Equal(future, @event.Future);
+                return @event.Bubble();
+            };
+            future.FutureException += delegate(FutureExceptionEvent @event)
+            {
+                handler2 = true;
+                Assert.IsType(typeof(ArgumentException), @event.Exception);
+                Assert.Equal(future, @event.Future);
+                return FutureProcess.Terminate;
+            };
+            enumerator = future.Poll();
+            Assert.False(enumerator.MoveNext());
+            Assert.Equal(true, future.Get());
+            Assert.True(future.IsDone);
+            Assert.False(future.IsCancelled);
+            Assert.False(handler1);
+            Assert.False(handler2);
+        }
+
+        [Fact]
+        public void ContinueStacked2()
+        {
+            Future<bool> future;
+            IEnumerator enumerator;
+            bool handler1;
+            bool handler2;
+
+            handler1 = false;
+            handler2 = false;
+            future = this.Continues(2, typeof(ArithmeticException));
+            future.FutureException += delegate(FutureExceptionEvent @event)
+            {
+                handler1 = true;
+                Assert.IsType(typeof(ArgumentException), @event.Exception);
+                Assert.Equal(future, @event.Future);
+                return @event.Bubble();
+            };
+            future.FutureException += delegate(FutureExceptionEvent @event)
+            {
+                handler2 = true;
+                Assert.IsType(typeof(ArgumentException), @event.Exception);
+                Assert.Equal(future, @event.Future);
+                return FutureProcess.Terminate;
+            };
+            enumerator = future.Poll();
+            Assert.False(enumerator.MoveNext());
+            Assert.Equal(true, future.Get());
             Assert.True(future.IsDone);
             Assert.False(future.IsCancelled);
             Assert.False(handler1);
