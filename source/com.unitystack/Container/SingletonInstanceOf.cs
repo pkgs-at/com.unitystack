@@ -22,19 +22,20 @@ namespace UnityStack.Container
 {
 
     public class SingletonInstanceOf<InstanceType>
-        : EveryNewInstanceOf<InstanceType> where InstanceType : class
+        : EveryNewInstanceOf<InstanceType>, ActivateOrdered
+        where InstanceType : class
     {
 
-        private readonly int _activationOrder;
+        private readonly int _activateOrder;
 
         private InstanceType _instance;
 
         public SingletonInstanceOf(
-            int activationOrder,
+            int activateOrder,
             params InstanceTypeForName[] types)
             : base(types)
         {
-            this._activationOrder = activationOrder;
+            this._activateOrder = activateOrder;
             this._instance = null;
         }
 
@@ -42,15 +43,15 @@ namespace UnityStack.Container
             params InstanceTypeForName[] types)
             : base(types)
         {
-            this._activationOrder = Int32.MaxValue;
+            this._activateOrder = Int32.MaxValue;
             this._instance = null;
         }
 
-        public int ActivationOrder
+        public int ActivateOrder
         {
             get
             {
-                return this._activationOrder;
+                return this._activateOrder;
             }
         }
 
@@ -65,7 +66,8 @@ namespace UnityStack.Container
         public override InstanceType Get()
         {
             if (this._instance == null)
-                throw new InvalidOperationException("domain state: not initialized");
+                throw new InvalidOperationException(
+                    "domain state: not initialized");
             return this._instance;
         }
 

@@ -16,7 +16,11 @@
  */
 
 using System;
+using System.Reflection;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
+using UnityStack.Container.Configuration;
 
 namespace UnityStack.Container
 {
@@ -24,9 +28,81 @@ namespace UnityStack.Container
     public abstract class Domain
     {
 
-        public virtual void Initialize(params Stream[] sources)
+        private const BindingFlags TargetFieldBindingFlags =
+            BindingFlags.GetField | BindingFlags.Public | BindingFlags.Instance;
+
+        internal class ConfigurableInstanceOfBag
         {
-            // TODO
+
+            internal ConfigurableInstanceOf InstanceOf;
+
+            internal DomainConfiguration.InstanceSetting InstanceSetting;
+
+        }
+
+        internal class ActivateOrderedInstanceOfBag
+            : ConfigurableInstanceOfBag, IComparable<ActivateOrderedInstanceOfBag>
+        {
+
+            internal int ActivateOrder;
+
+            public int CompareTo(ActivateOrderedInstanceOfBag other)
+            {
+                return this.ActivateOrder - other.ActivateOrder;
+            }
+
+        }
+
+        public virtual void Initialize(DomainConfiguration configuration)
+        {
+            Type type;
+            List<ActivateOrderedInstanceOfBag> sorting;
+            List<ConfigurableInstanceOfBag> after;
+
+            type = this.GetType();
+            sorting = new List<ActivateOrderedInstanceOfBag>();
+            after = new List<ConfigurableInstanceOfBag>();
+            foreach (FieldInfo info in type.GetFields(TargetFieldBindingFlags))
+            {
+                Type fieldType;
+                Type fieldGenericType;
+                object value;
+                ConfigurableInstanceOfBag bag;
+
+                fieldType = info.FieldType;
+                if (!fieldType.IsGenericType) continue;
+                fieldGenericType = info.FieldType.GetGenericTypeDefinition();
+                if (!typeof(InstanceOf<>).IsAssignableFrom(fieldGenericType))
+                    continue;
+                value = info.GetValue(this);
+                if (!(value is ConfigurableInstanceOf)) continue;
+                if (value is ActivateOrdered)
+                {
+                    ActivateOrderedInstanceOfBag orderedBag;
+
+                    orderedBag = new ActivateOrderedInstanceOfBag();
+                    orderedBag.ActivateOrder =
+                        ((ActivateOrdered)value).ActivateOrder;
+                    sorting.Add(orderedBag);
+                    bag = orderedBag;
+                }
+                else
+                {
+                    bag = new ConfigurableInstanceOfBag();
+                    after.Add(bag);
+                }
+                bag.InstanceOf = (ConfigurableInstanceOf)value;
+                bag.InstanceSetting = configuration[info.Name];
+            }
+            sorting.Sort();
+            foreach (ConfigurableInstanceOfBag bag in sorting)
+                bag.InstanceOf.Configure(
+                    bag.InstanceSetting.Name,
+                    bag.InstanceSetting.Properties);
+            foreach (ConfigurableInstanceOfBag bag in after)
+                bag.InstanceOf.Configure(
+                    bag.InstanceSetting.Name,
+                    bag.InstanceSetting.Properties);
         }
 
     }

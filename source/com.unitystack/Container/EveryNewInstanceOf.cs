@@ -22,12 +22,15 @@ namespace UnityStack.Container
 {
 
     public class EveryNewInstanceOf<InstanceType>
-        : InstanceOf<InstanceType> where InstanceType : class
+        : ConfigurableInstanceOf, InstanceOf<InstanceType>
+        where InstanceType : class
     {
 
         private readonly InstanceTypeForName[] _types;
 
         private Type _type;
+
+        private bool _hasInjectableConstructor;
 
         private NameValueCollection _properties;
 
@@ -37,14 +40,15 @@ namespace UnityStack.Container
             this._type = null;
         }
 
-        internal virtual void Configure(
+        internal override void Configure(
             string name,
             NameValueCollection properties)
         {
             InstanceTypeForName type;
 
             if (this._type != null)
-                throw new InvalidOperationException("container already configured");
+                throw new InvalidOperationException(
+                    "container already configured");
             type = null;
             foreach (InstanceTypeForName checkee in this._types)
             {
@@ -55,8 +59,11 @@ namespace UnityStack.Container
                 }
             }
             if (type == null)
-                throw new ArgumentException("type not found for: " + name);
+                throw new ArgumentException(
+                    "type not found for: " + name);
             this._type = type.Type;
+            this._hasInjectableConstructor =
+                this._type.GetConstructor(new Type[] { this.GetType() }) != null;
             this._properties = properties;
         }
 
@@ -65,10 +72,21 @@ namespace UnityStack.Container
             InstanceType instance;
 
             if (this._type == null)
-                throw new InvalidOperationException("container not configured");
-            // TODO inject on activate?
-            instance = (InstanceType)Activator.CreateInstance(this._type);
-            // TODO
+                throw new InvalidOperationException(
+                    "container not configured");
+            if (this._hasInjectableConstructor)
+            {
+                instance = (InstanceType)Activator.CreateInstance(
+                    this._type,
+                    this);
+            }
+            else
+            {
+                instance = (InstanceType)Activator.CreateInstance(
+                    this._type);
+            }
+            if (instance is Configurable)
+                ((Configurable)instance).Configure(this._properties);
             return instance;
         }
 

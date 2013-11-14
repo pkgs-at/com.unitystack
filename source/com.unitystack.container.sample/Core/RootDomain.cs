@@ -18,6 +18,7 @@
 using System;
 using At.Pkgs.Logging;
 using UnityStack.Container;
+using UnityStack.Container.Configuration;
 using Core.Real;
 using Core.Dummy;
 
@@ -49,6 +50,13 @@ namespace Core
                     typeof(DummyItemService),
                     "dummy",
                     "test"));
+
+        public override void Initialize(DomainConfiguration configuration)
+        {
+            ((ImmediateInstanceOf<LogManager>)this.LogManager).Set(
+                Bootstrap.Instance.LogManager);
+            base.Initialize(configuration);
+        }
 
     }
 

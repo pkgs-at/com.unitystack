@@ -21,31 +21,10 @@ using System.Collections.Specialized;
 namespace UnityStack.Container
 {
 
-    public class ImmediateInstanceOf<InstanceType>
-        : InstanceOf<InstanceType>
-        where InstanceType : class
+    public interface Configurable
     {
 
-        private InstanceType _instance;
-
-        public ImmediateInstanceOf()
-        {
-            this._instance = null;
-        }
-
-        public InstanceType Get()
-        {
-            if (this._instance == null)
-                throw new InvalidOperationException("domain state: not initialized");
-            return this._instance;
-        }
-
-        public void Set(InstanceType instance)
-        {
-            if (this._instance != null)
-                throw new InvalidOperationException("domain state: initialized");
-            this._instance = instance;
-        }
+        void Configure(NameValueCollection properties);
 
     }
 

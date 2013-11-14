@@ -52,6 +52,11 @@
   <ItemGroup>
     <Compile Include="AbstractBootstrap.cs" />
     <Compile Include="Base\BaseBehaviour.cs" />
+    <Compile Include="Container\ActivateOrdered.cs" />
+    <Compile Include="Container\Configurable.cs" />
+    <Compile Include="Container\ConfigurableInstanceOf.cs" />
+    <Compile Include="Container\Configuration\BasicDomainConfiguration.cs" />
+    <Compile Include="Container\Configuration\DomainConfiguration.cs" />
     <Compile Include="Future.cs" />
     <Compile Include="Container\Domain.cs" />
     <Compile Include="Container\InstanceOf.cs" />

@@ -101,7 +101,8 @@ namespace UnityStack
                 if (!File.Exists(path))
                 {
                     if (throwOnError)
-                        throw new FileNotFoundException("resource not found: " + path);
+                        throw new FileNotFoundException(
+                            "resource not found: " + path);
                     else
                         return null;
                 }
@@ -115,7 +116,8 @@ namespace UnityStack
                 if (asset == null)
                 {
                     if (throwOnError)
-                        throw new FileNotFoundException("resource not found: " + path);
+                        throw new FileNotFoundException(
+                            "resource not found: " + path);
                     else
                         return null;
                 }
@@ -136,7 +138,8 @@ namespace UnityStack
                 if (!File.Exists(path))
                 {
                     if (throwOnError)
-                        throw new FileNotFoundException("resource not found: " + path);
+                        throw new FileNotFoundException(
+                            "resource not found: " + path);
                     else
                         return null;
                 }
@@ -150,7 +153,8 @@ namespace UnityStack
                 if (asset == null)
                 {
                     if (throwOnError)
-                        throw new FileNotFoundException("resource not found: " + path);
+                        throw new FileNotFoundException(
+                            "resource not found: " + path);
                     else
                         return null;
                 }
@@ -171,7 +175,8 @@ namespace UnityStack
                 if (!File.Exists(path))
                 {
                     if (throwOnError)
-                        throw new FileNotFoundException("resource not found: " + path);
+                        throw new FileNotFoundException(
+                            "resource not found: " + path);
                     else
                         return null;
                 }
@@ -185,7 +190,8 @@ namespace UnityStack
                 if (asset == null)
                 {
                     if (throwOnError)
-                        throw new FileNotFoundException("resource not found: " + path);
+                        throw new FileNotFoundException(
+                            "resource not found: " + path);
                     else
                         return null;
                 }
@@ -203,7 +209,8 @@ namespace UnityStack
             UnityLoggingConfiguration configuration;
             Stream stream;
 
-            configuration = new UnityLoggingConfiguration(manager, this.ResourcePath);
+            configuration =
+                new UnityLoggingConfiguration(manager, this.ResourcePath);
             stream = this.GetResourceAsStream("BaseSettings/Logging.xml", true);
             try
             {
@@ -282,7 +289,8 @@ namespace UnityStack
             if (!typeof(AbstractBootstrap).IsAssignableFrom(target))
                 throw new TypeLoadException(
                     "Bootstrap is not instance of AbstractBootstrap");
-            AbstractBootstrap._instance = (AbstractBootstrap)Activator.CreateInstance(target);
+            AbstractBootstrap._instance =
+                (AbstractBootstrap)Activator.CreateInstance(target);
             AbstractBootstrap._instance.Intialize();
         }
 
