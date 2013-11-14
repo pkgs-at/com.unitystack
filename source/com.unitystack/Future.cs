@@ -56,8 +56,6 @@ namespace UnityStack
 
         Continue,
 
-        YieldBreak,
-
         Terminate
 
     }

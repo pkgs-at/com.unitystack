@@ -144,8 +144,7 @@ namespace UnityStack
                 switch (process)
                 {
                     case FutureProcess.Continue:
-                    case FutureProcess.YieldBreak:
-                        return true;
+                        return false;
                     case FutureProcess.Terminate:
                         throw new HandledFutureException();
                     default:
@@ -169,8 +168,6 @@ namespace UnityStack
             {
                 object message;
 
-                if (process == FutureProcess.Continue) continue;
-                if (process == FutureProcess.YieldBreak) yield break;
                 message = enumerator.Current;
                 if (message is Future)
                 {
@@ -188,8 +185,6 @@ namespace UnityStack
                     inner = future.Poll();
                     while (this.TrappedMoveNext(inner, out process))
                     {
-                        if (process == FutureProcess.Continue) break;
-                        if (process == FutureProcess.YieldBreak) yield break;
                         yield return inner.Current;
                         if (this._cancelling && !cancelled)
                         {
@@ -197,10 +192,12 @@ namespace UnityStack
                             cancelled = true;
                         }
                     }
+                    if (process == FutureProcess.Continue) yield break;
                     continue;
                 }
                 yield return message;
             }
+            if (process == FutureProcess.Continue) yield break;
             if (!this._resulted && !this._cancelling)
                 throw new InvalidProgramException("result not set");
             if (this._resulted)
