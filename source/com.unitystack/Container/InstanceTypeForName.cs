@@ -20,14 +20,14 @@ using System;
 namespace UnityStack.Container
 {
 
-    public class InstanceTypeFor
+    public class InstanceTypeForName
     {
 
         private readonly Type _type;
 
         private readonly string[] _names;
 
-        public InstanceTypeFor(Type type, params string[] names)
+        public InstanceTypeForName(Type type, params string[] names)
         {
             this._type = type;
             this._names = names;

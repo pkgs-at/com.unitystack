@@ -21,17 +21,17 @@ using System.Collections.Specialized;
 namespace UnityStack.Container
 {
 
-    public class SwitchableInstanceOf<InstanceType>
+    public class EveryNewInstanceOf<InstanceType>
         : InstanceOf<InstanceType> where InstanceType : class
     {
 
-        private readonly InstanceTypeFor[] _types;
+        private readonly InstanceTypeForName[] _types;
 
         private Type _type;
 
         private NameValueCollection _properties;
 
-        public SwitchableInstanceOf(params InstanceTypeFor[] types)
+        public EveryNewInstanceOf(params InstanceTypeForName[] types)
         {
             this._types = types;
             this._type = null;
@@ -41,12 +41,12 @@ namespace UnityStack.Container
             string name,
             NameValueCollection properties)
         {
-            InstanceTypeFor type;
+            InstanceTypeForName type;
 
             if (this._type != null)
                 throw new InvalidOperationException("container already configured");
             type = null;
-            foreach (InstanceTypeFor checkee in this._types)
+            foreach (InstanceTypeForName checkee in this._types)
             {
                 if (checkee.Matches(name))
                 {

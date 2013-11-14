@@ -31,21 +31,21 @@ namespace Core
             new ImmediateInstanceOf<LogManager>();
 
         public readonly InstanceOf<ItemModel> ItemModel =
-            new SwitchableInstanceOf<ItemModel>(
-                new InstanceTypeFor(
+            new EveryNewInstanceOf<ItemModel>(
+                new InstanceTypeForName(
                     typeof(RealItemModel),
                     "real"),
-                new InstanceTypeFor(
+                new InstanceTypeForName(
                     typeof(DummyItemModel),
                     "dummy",
                     "test"));
 
         public readonly InstanceOf<ItemService> ItemService =
-            new SingletonSwitchableInstanceOf<ItemService>(
-                new InstanceTypeFor(
+            new SingletonInstanceOf<ItemService>(
+                new InstanceTypeForName(
                     typeof(RealItemService),
                     "real"),
-                new InstanceTypeFor(
+                new InstanceTypeForName(
                     typeof(DummyItemService),
                     "dummy",
                     "test"));

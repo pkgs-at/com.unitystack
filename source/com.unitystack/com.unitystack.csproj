@@ -55,10 +55,10 @@
     <Compile Include="Future.cs" />
     <Compile Include="Container\Domain.cs" />
     <Compile Include="Container\InstanceOf.cs" />
-    <Compile Include="Container\InstanceTypeFor.cs" />
-    <Compile Include="Container\SwitchableInstanceOf.cs" />
+    <Compile Include="Container\InstanceTypeForName.cs" />
+    <Compile Include="Container\EveryNewInstanceOf.cs" />
     <Compile Include="Container\ImmediateInstanceOf.cs" />
-    <Compile Include="Container\SingletonSwitchableInstanceOf.cs" />
+    <Compile Include="Container\SingletonInstanceOf.cs" />
     <Compile Include="FutureTask.cs" />
     <Compile Include="Logging\UnityDebugAppender.cs" />
     <Compile Include="Logging\UnityLoggingConfiguration.cs" />

@@ -21,25 +21,25 @@ using System.Collections.Specialized;
 namespace UnityStack.Container
 {
 
-    public class SingletonSwitchableInstanceOf<InstanceType>
-        : SwitchableInstanceOf<InstanceType> where InstanceType : class
+    public class SingletonInstanceOf<InstanceType>
+        : EveryNewInstanceOf<InstanceType> where InstanceType : class
     {
 
         private readonly int _activationOrder;
 
         private InstanceType _instance;
 
-        public SingletonSwitchableInstanceOf(
+        public SingletonInstanceOf(
             int activationOrder,
-            params InstanceTypeFor[] types)
+            params InstanceTypeForName[] types)
             : base(types)
         {
             this._activationOrder = activationOrder;
             this._instance = null;
         }
 
-        public SingletonSwitchableInstanceOf(
-            params InstanceTypeFor[] types)
+        public SingletonInstanceOf(
+            params InstanceTypeForName[] types)
             : base(types)
         {
             this._activationOrder = Int32.MaxValue;
