@@ -16,57 +16,15 @@
  */
 
 using System;
-using System.Collections;
 
 namespace UnityStack
 {
 
-    public interface Future
+    public class HandledFutureException : Exception
     {
 
-        event FutureExceptionEventHandler FutureException;
-
-        bool IsCancelled
-        {
-            get;
-        }
-
-        bool IsDone
-        {
-            get;
-        }
-
-        IEnumerator Poll();
-
-        void Cancel();
+        // nothing
 
     }
-
-    public interface Future<ResultType> : Future
-    {
-
-        ResultType Get();
-
-    }
-
-    public interface FutureExceptionEvent
-    {
-
-        Future Future
-        {
-            get;
-        }
-
-        Exception Exception
-        {
-            get;
-        }
-
-        void Bubble();
-
-    }
-
-    public delegate void FutureExceptionEventHandler(
-        FutureExceptionEvent @event);
 
 }

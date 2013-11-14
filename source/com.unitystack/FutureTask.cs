@@ -31,6 +31,8 @@ namespace UnityStack
 
         private readonly Task _task;
 
+        private FutureExceptionEventHandlerChain _onErrorHandlerChain;
+
         private bool _cancelling;
 
         private bool _cancelled;
@@ -43,6 +45,7 @@ namespace UnityStack
 
         protected internal FutureTask()
         {
+            this._onErrorHandlerChain = null;
             this._cancelling = false;
             this._cancelled = false;
             this._resulted = false;
@@ -55,11 +58,31 @@ namespace UnityStack
         {
             if (task == null) throw new ArgumentNullException();
             this._task = task;
+            this._onErrorHandlerChain = null;
             this._cancelling = false;
             this._cancelled = false;
             this._resulted = false;
             this._done = false;
             this._result = default(ResultType);
+        }
+
+        public event FutureExceptionEventHandler FutureException
+        {
+            add
+            {
+                lock (this)
+                {
+                    FutureExceptionEventHandlerChain next;
+
+                    next = this._onErrorHandlerChain;
+                    this._onErrorHandlerChain =
+                        new FutureExceptionEventHandlerChain(value, next);
+                }
+            }
+            remove
+            {
+                throw new NotSupportedException();
+            }
         }
 
         public bool IsCancelling
@@ -99,6 +122,26 @@ namespace UnityStack
             this._result = result;
         }
 
+        protected bool TrappedMoveNext(IEnumerator enumerator)
+        {
+            try
+            {
+                return enumerator.MoveNext();
+            }
+            catch (Exception throwable)
+            {
+                FutureExceptionEventHandlerChain chain;
+
+                lock (this)
+                {
+                    chain = this._onErrorHandlerChain;
+                }
+                if (chain == null) throw;
+                chain.Apply(this, throwable);
+                throw new HandledFutureException();
+            }
+        }
+
         public IEnumerator Poll()
         {
             IEnumerator enumerator;
@@ -109,7 +152,7 @@ namespace UnityStack
                 yield break;
             }
             enumerator = this.Start();
-            while (enumerator.MoveNext())
+            while (this.TrappedMoveNext(enumerator))
             {
                 object message;
 
@@ -128,7 +171,7 @@ namespace UnityStack
                         cancelled = true;
                     }
                     inner = future.Poll();
-                    while (inner.MoveNext())
+                    while (this.TrappedMoveNext(inner))
                     {
                         yield return inner.Current;
                         if (this._cancelling && !cancelled)

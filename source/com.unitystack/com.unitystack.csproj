@@ -59,10 +59,13 @@
     <Compile Include="Container\EveryNewInstanceOf.cs" />
     <Compile Include="Container\ImmediateInstanceOf.cs" />
     <Compile Include="Container\SingletonInstanceOf.cs" />
+    <Compile Include="FutureExceptionEventHandlerChain.cs" />
     <Compile Include="FutureTask.cs" />
+    <Compile Include="HandledFutureException.cs" />
     <Compile Include="Logging\UnityDebugAppender.cs" />
     <Compile Include="Logging\UnityLoggingConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnhandledFutureExceptionHandler.cs" />
     <Compile Include="Yields.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -16,57 +16,29 @@
  */
 
 using System;
-using System.Collections;
 
 namespace UnityStack
 {
 
-    public interface Future
+    public class UnhandledFutureException : Exception
     {
 
-        event FutureExceptionEventHandler FutureException;
+        private Future _future;
 
-        bool IsCancelled
+        public UnhandledFutureException(Future future, Exception cause)
+            : base("future exception is not handled", cause)
         {
-            get;
+            this._future = future;
         }
 
-        bool IsDone
+        public Future Future
         {
-            get;
+            get
+            {
+                return this._future;
+            }
         }
-
-        IEnumerator Poll();
-
-        void Cancel();
 
     }
-
-    public interface Future<ResultType> : Future
-    {
-
-        ResultType Get();
-
-    }
-
-    public interface FutureExceptionEvent
-    {
-
-        Future Future
-        {
-            get;
-        }
-
-        Exception Exception
-        {
-            get;
-        }
-
-        void Bubble();
-
-    }
-
-    public delegate void FutureExceptionEventHandler(
-        FutureExceptionEvent @event);
 
 }
