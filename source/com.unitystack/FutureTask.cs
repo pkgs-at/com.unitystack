@@ -103,6 +103,11 @@ namespace UnityStack
         {
             IEnumerator enumerator;
 
+            if (this._cancelling)
+            {
+                this._cancelled = true;
+                yield break;
+            }
             enumerator = this.Start();
             while (enumerator.MoveNext())
             {
@@ -112,20 +117,25 @@ namespace UnityStack
                 if (message is Future)
                 {
                     Future future;
-                    IEnumerator inner;
                     bool cancelled;
+                    IEnumerator inner;
 
                     future = (Future)message;
-                    inner = future.Poll();
                     cancelled = false;
+                    if (this._cancelling)
+                    {
+                        future.Cancel();
+                        cancelled = true;
+                    }
+                    inner = future.Poll();
                     while (inner.MoveNext())
                     {
+                        yield return inner.Current;
                         if (this._cancelling && !cancelled)
                         {
                             future.Cancel();
                             cancelled = true;
                         }
-                        yield return inner.Current;
                     }
                     continue;
                 }
