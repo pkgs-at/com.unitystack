@@ -21,34 +21,6 @@ using System.Collections;
 namespace UnityStack
 {
 
-    public interface Future
-    {
-
-        event FutureExceptionEventHandler FutureException;
-
-        bool IsCancelled
-        {
-            get;
-        }
-
-        bool IsDone
-        {
-            get;
-        }
-
-        IEnumerator Poll();
-
-        void Cancel();
-
-    }
-
-    public interface Future<ResultType> : Future
-    {
-
-        ResultType Get();
-
-    }
-
     public enum FutureProcess
     {
 
@@ -79,5 +51,38 @@ namespace UnityStack
 
     public delegate FutureProcess FutureExceptionEventHandler(
         FutureExceptionEvent @event);
+
+    public delegate void FutureCompleted<ResultType>(
+        Future<ResultType> future);
+
+    public interface Future
+    {
+
+        event FutureExceptionEventHandler FutureException;
+
+        bool IsCancelled
+        {
+            get;
+        }
+
+        bool IsDone
+        {
+            get;
+        }
+
+        IEnumerator Poll();
+
+        void Cancel();
+
+    }
+
+    public interface Future<ResultType> : Future
+    {
+
+        ResultType Get();
+
+        IEnumerator Poll(FutureCompleted<ResultType> completed);
+
+    }
 
 }

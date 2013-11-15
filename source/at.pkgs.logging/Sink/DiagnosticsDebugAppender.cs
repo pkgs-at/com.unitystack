@@ -34,9 +34,8 @@ namespace At.Pkgs.Logging.Sink
         }
 
         public DiagnosticsDebugAppender()
-        {
-            this._useFail = false;
-        }
+            : this(false)
+        { /* do nothing */ }
 
         public bool UseFail
         {

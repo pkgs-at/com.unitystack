@@ -45,6 +45,7 @@ namespace UnityStack
 
         protected internal FutureTask()
         {
+            this._task = null;
             this._onErrorHandlerChain = null;
             this._cancelling = false;
             this._cancelled = false;
@@ -55,15 +56,10 @@ namespace UnityStack
 
         public FutureTask(
             Task task)
+            :this()
         {
             if (task == null) throw new ArgumentNullException();
             this._task = task;
-            this._onErrorHandlerChain = null;
-            this._cancelling = false;
-            this._cancelled = false;
-            this._resulted = false;
-            this._done = false;
-            this._result = default(ResultType);
         }
 
         public event FutureExceptionEventHandler FutureException
@@ -204,6 +200,17 @@ namespace UnityStack
                 this._done = true;
             else
                 this._cancelled = true;
+            yield break;
+        }
+
+        public IEnumerator Poll(FutureCompleted<ResultType> completed)
+        {
+            IEnumerator enumerator;
+
+            enumerator = this.Poll();
+            while (enumerator.MoveNext())
+                yield return enumerator.Current;
+            completed(this);
             yield break;
         }
 

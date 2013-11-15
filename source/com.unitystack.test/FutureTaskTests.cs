@@ -62,6 +62,31 @@ namespace UnityStack.Test
             Assert.False(future.IsCancelled);
         }
 
+        [Fact]
+        public void FutureCompleted()
+        {
+            bool fired;
+            Future<bool> future;
+            IEnumerator enumerator;
+
+            fired = false;
+            future = this.BoolFutureInt(3);
+            enumerator = future.Poll(delegate(Future<bool> inner){
+                Assert.Equal(future, inner);
+                Assert.Equal(true, inner.Get());
+                Assert.True(inner.IsDone);
+                Assert.False(inner.IsCancelled);
+                fired = true;
+            });
+            for (int i = 0; i < 3; i++)
+            {
+                Assert.True(enumerator.MoveNext());
+                Assert.Equal(i, enumerator.Current);
+            }
+            Assert.False(enumerator.MoveNext());
+            Assert.True(fired);
+        }
+
         protected IEnumerator StringNestedFutureIntIntInternal(
             FutureTask<string> future,
             int b,
