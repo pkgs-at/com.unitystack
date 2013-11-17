@@ -9,7 +9,10 @@
       <Synchronized>
         <AutoFlush>
           <CloseShield>
-            <Instance key1="ValueA" key2="ValueB">ConsoleAppender</Instance>
+            <Final name="ConsoleAppender">
+              <Property name="PropA">ValueA</Property>
+              <Property name="PropB">ValueB</Property>
+            </Final>
           </CloseShield>
         </AutoFlush>
       </Synchronized>
@@ -38,6 +41,6 @@
     </Format>
   </Appender>
   <Log reset="true">
-    <Pattern matches="*" level="debug"/>
+    <Pattern level="debug">*</Pattern>
   </Log>
 </BasicLoggingConfiguration>

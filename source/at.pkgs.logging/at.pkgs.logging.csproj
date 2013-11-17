@@ -60,6 +60,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\BasicLoggingConfiguration.cs" />
+    <Compile Include="Util\Strings.cs" />
+    <Compile Include="Util\XmlScanner.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="LogEntity.cs" />
     <Compile Include="LogLevel.cs" />

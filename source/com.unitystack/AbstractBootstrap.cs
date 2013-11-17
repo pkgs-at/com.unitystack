@@ -214,7 +214,7 @@ namespace UnityStack
             stream = this.GetResourceAsStream("BaseSettings/Logging.xml", true);
             try
             {
-                configuration.Configure(stream);
+                configuration.Load(stream);
             }
             finally
             {
@@ -224,7 +224,7 @@ namespace UnityStack
             if (stream == null) return;
             try
             {
-                configuration.Configure(stream);
+                configuration.Load(stream);
             }
             finally
             {

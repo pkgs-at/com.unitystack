@@ -6,7 +6,7 @@
   <LogExtendedFrame value="false"/>
   <Appender>
     <Pipeline>
-      <Instance>ConsoleAppender</Instance>
+      <Final name="ConsoleAppender"/>
     </Pipeline>
     <Format>
       <NewLine>
@@ -32,6 +32,6 @@
     </Format>
   </Appender>
   <Log reset="true">
-    <Pattern matches="*" level="notice"/>
+    <Pattern level="notice">*</Pattern>
   </Log>
 </BasicLoggingConfiguration>

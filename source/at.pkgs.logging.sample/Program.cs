@@ -339,7 +339,7 @@ Appender#1 2013-11-11T13:12:11.906 ERROR   At.Pkgs.Logging.Sample.Program multip
             stream = System.IO.File.OpenRead("Logging1.xml");
             try
             {
-                configuration.Configure(stream);
+                configuration.Load(stream);
             }
             finally
             {
@@ -350,7 +350,7 @@ Appender#1 2013-11-11T13:12:11.906 ERROR   At.Pkgs.Logging.Sample.Program multip
             stream = System.IO.File.OpenRead("Logging2.xml");
             try
             {
-                configuration.Configure(stream);
+                configuration.Load(stream);
             }
             finally
             {

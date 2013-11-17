@@ -16,10 +16,10 @@
  */
 
 using System;
+using System.Text;
 using System.Diagnostics;
 using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
+using At.Pkgs.Logging.Util;
 
 namespace At.Pkgs.Logging.Sink
 {
@@ -78,36 +78,6 @@ namespace At.Pkgs.Logging.Sink
             Message,
 
             StackTrace
-
-        }
-
-        /*
-         * repackaged from At.Pkgs.Util
-         */
-        public static class Strings
-        {
-
-            private static readonly Regex _prepareFormatRegex =
-                new Regex(@"(?<={)\w+");
-
-            public static string PrepareFormat(Type keys, string format)
-            {
-                return _prepareFormatRegex.Replace(format, delegate(Match match)
-                {
-                    return Enum.Format(keys, Enum.Parse(keys, match.Value), "D");
-                });
-            }
-
-            private static readonly Regex _reversePreparedFormatRegex =
-                new Regex(@"(?<={)\d+");
-
-            public static string ReversePreparedFormat(Type keys, string format)
-            {
-                return _reversePreparedFormatRegex.Replace(format, delegate(Match match)
-                {
-                    return Enum.Format(keys, Enum.Parse(keys, match.Value), "G");
-                });
-            }
 
         }
 

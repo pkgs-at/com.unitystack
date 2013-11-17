@@ -16,9 +16,10 @@
  */
 
 using System;
-using System.Collections.Specialized;
+using System.Collections.Generic;
 using At.Pkgs.Logging;
 using At.Pkgs.Logging.Configuration;
+using At.Pkgs.Logging.Sink;
 
 namespace UnityStack.Logging
 {
@@ -34,17 +35,16 @@ namespace UnityStack.Logging
             this._root = root;
         }
 
-        public override At.Pkgs.Logging.Sink.Appender CreateAppender(
+        public override Appender CreateAppenderPipelineFinal(
             string name,
-            NameValueCollection parameters)
+            IDictionary<string, string> parameters)
         {
             switch (name)
             {
                 case "UnityDebugAppender":
                     return new UnityDebugAppender();
-                default:
-                    return base.CreateAppender(name, parameters);
             }
+            return base.CreateAppenderPipelineFinal(name, parameters);
         }
 
     }
