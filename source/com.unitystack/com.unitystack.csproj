@@ -70,6 +70,8 @@
     <Compile Include="Logging\UnityDebugAppender.cs" />
     <Compile Include="Logging\UnityLoggingConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Vendor\At.Pkgs.Util\Strings.cs" />
+    <Compile Include="Vendor\At.Pkgs.Util\XmlScanner.cs" />
     <Compile Include="Yields.cs" />
   </ItemGroup>
   <ItemGroup>

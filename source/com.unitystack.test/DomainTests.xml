@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<BasicDomainConfiguration>
+  <Use name="default">
+    <Field name="EveryNew">
+      <Property name="PropA">ValueA</Property>
+      <Property name="PropB">ValueB</Property>
+    </Field>
+    <Field name="Singleton"></Field>
+    <Field name="Ordered0"></Field>
+    <Field name="Ordered1"></Field>
+  </Use>
+  <Use name="injected">
+    <Field name="EveryNew">
+      <Property name="PropA">ValueA</Property>
+      <Property name="PropB">ValueB</Property>
+    </Field>
+    <Field name="Singleton">
+      <Property name="Prop1">Value1</Property>
+      <Property name="Prop1">Value1</Property>
+    </Field>
+    <Field name="Ordered0"></Field>
+    <Field name="Ordered1"></Field>
+  </Use>
+  <Use name="configured">
+  </Use>
+</BasicDomainConfiguration>

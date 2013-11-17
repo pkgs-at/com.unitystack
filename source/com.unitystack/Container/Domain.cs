@@ -18,7 +18,6 @@
 using System;
 using System.Reflection;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
 using UnityStack.Container.Configuration;
 
@@ -97,10 +96,12 @@ namespace UnityStack.Container
             sorting.Sort();
             foreach (ConfigurableInstanceOfBag bag in sorting)
                 bag.InstanceOf.Configure(
+                    this,
                     bag.InstanceSetting.Name,
                     bag.InstanceSetting.Properties);
             foreach (ConfigurableInstanceOfBag bag in after)
                 bag.InstanceOf.Configure(
+                    this,
                     bag.InstanceSetting.Name,
                     bag.InstanceSetting.Properties);
         }

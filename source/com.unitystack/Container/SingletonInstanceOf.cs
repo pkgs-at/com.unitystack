@@ -16,7 +16,7 @@
  */
 
 using System;
-using System.Collections.Specialized;
+using System.Collections.Generic;
 
 namespace UnityStack.Container
 {
@@ -53,10 +53,11 @@ namespace UnityStack.Container
         }
 
         internal override void Configure(
+            Domain domain,
             string name,
-            NameValueCollection properties)
+            IDictionary<string, string> properties)
         {
-            base.Configure(name, properties);
+            base.Configure(domain, name, properties);
             this._instance = base.Get();
         }
 

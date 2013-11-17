@@ -16,7 +16,6 @@
  */
 
 using System;
-using System.Collections.Specialized;
 
 namespace UnityStack.Container
 {

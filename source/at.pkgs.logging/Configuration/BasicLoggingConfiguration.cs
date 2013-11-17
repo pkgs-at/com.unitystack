@@ -304,12 +304,32 @@ namespace At.Pkgs.Logging.Configuration
 
         public void Load(XmlReader reader)
         {
-            this.Load(new XmlScanner(reader));
+            XmlScanner scanner;
+
+            scanner = new XmlScanner(reader);
+            try
+            {
+                this.Load(scanner);
+            }
+            finally
+            {
+                scanner.Close();
+            }
         }
 
         public void Load(Stream stream)
         {
-            this.Load(new XmlScanner(stream));
+            XmlScanner scanner;
+
+            scanner = new XmlScanner(stream);
+            try
+            {
+                this.Load(scanner);
+            }
+            finally
+            {
+                scanner.Close();
+            }
         }
 
     }

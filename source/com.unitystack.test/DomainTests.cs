@@ -16,8 +16,10 @@
  */
 
 using System;
-using System.Collections.Specialized;
+using System.Collections.Generic;
+using System.IO;
 using UnityStack.Container;
+using UnityStack.Container.Configuration;
 
 namespace UnityStack.Test
 {
@@ -38,18 +40,39 @@ namespace UnityStack.Test
         public InjectedEveryNew(TestDomain domain)
         {
             this.Domain = domain;
+            Console.WriteLine(String.Format(
+                "{0}: constructor with: {1}",
+                this.GetType().Name,
+                domain.GetType().Name));
         }
 
     }
 
-    public class ConfiguredEveryNew : EveryNew
+    public class ConfiguredEveryNew : EveryNew, Configurable
     {
 
-        public NameValueCollection Properties;
+        public IDictionary<string, string> Properties;
 
-        public void Configure(NameValueCollection properties)
+        public ConfiguredEveryNew()
+        {
+            Console.WriteLine(String.Format(
+                "{0}: constructor",
+                this.GetType().Name));
+        }
+
+        public void Configure(IDictionary<string, string> properties)
         {
             this.Properties = properties;
+            Console.WriteLine(String.Format(
+                "{0}: configure",
+                this.GetType().Name));
+            foreach (string name in properties.Keys)
+            {
+                Console.WriteLine(String.Format(
+                    "    {0}: {1}",
+                    name,
+                    properties[name]));
+            }
         }
 
     }
@@ -60,6 +83,14 @@ namespace UnityStack.Test
 
     public class NormalSingleton : Singleton
     {
+
+        public NormalSingleton()
+        {
+            Console.WriteLine(String.Format(
+                "{0}: constructor",
+                this.GetType().Name));
+        }
+
     }
 
     public class InjectedConfiguredSingleton : Singleton, Configurable
@@ -67,26 +98,56 @@ namespace UnityStack.Test
 
         public TestDomain Domain;
 
-        public NameValueCollection Properties;
+        public IDictionary<string, string> Properties;
 
         public InjectedConfiguredSingleton(TestDomain domain)
         {
             this.Domain = domain;
+            Console.WriteLine(String.Format(
+                "{0}: constructor with: {1}",
+                this.GetType().Name,
+                domain.GetType().Name));
         }
 
-        public void Configure(NameValueCollection properties)
+        public void Configure(IDictionary<string, string> properties)
         {
             this.Properties = properties;
+            Console.WriteLine(String.Format(
+                "{0}: configure",
+                this.GetType().Name));
+            foreach (string name in properties.Keys)
+            {
+                Console.WriteLine(String.Format(
+                    "    {0}: {1}",
+                    name,
+                    properties[name]));
+            }
         }
 
     }
 
     public class Ordered0
     {
+
+        public Ordered0()
+        {
+            Console.WriteLine(String.Format(
+                "{0}: constructor",
+                this.GetType().Name));
+        }
+
     }
 
     public class Ordered1
     {
+
+        public Ordered1()
+        {
+            Console.WriteLine(String.Format(
+                "{0}: constructor",
+                this.GetType().Name));
+        }
+
     }
 
     public class TestDomain : Domain
@@ -114,7 +175,7 @@ namespace UnityStack.Test
                     "injected",
                     "configured"),
                 new InstanceTypeForName(
-                    typeof(ConfiguredEveryNew),
+                    typeof(NormalSingleton),
                     "default"));
 
         public readonly InstanceOf<Ordered0> Ordered0 =
@@ -139,13 +200,48 @@ namespace UnityStack.Test
 
     public class DomainTests
     {
-
         public static void Main(string[] arguments)
         {
             TestDomain domain;
+            BasicDomainConfiguration configuration;
+            Stream stream;
 
             domain = new TestDomain();
-//            domain.Initialize();
+            configuration = new BasicDomainConfiguration();
+            stream = File.OpenRead("DomainTests.xml");
+            try
+            {
+                configuration.Load(stream);
+            }
+            finally
+            {
+                stream.Close();
+            }
+            domain.Initialize(configuration);
+            Console.WriteLine(String.Format(
+                "* I have got: {0}",
+                domain.EveryNew.Get().GetType().Name));
+            Console.WriteLine(String.Format(
+                "* I have got: {0}",
+                domain.Singleton.Get().GetType().Name));
+            Console.WriteLine(String.Format(
+                "* I have got: {0}",
+                domain.Ordered0.Get().GetType().Name));
+            Console.WriteLine(String.Format(
+                "* I have got: {0}",
+                domain.Ordered1.Get().GetType().Name));
+            Console.WriteLine(String.Format(
+                "* I have got: {0}",
+                domain.EveryNew.Get().GetType().Name));
+            Console.WriteLine(String.Format(
+                "* I have got: {0}",
+                domain.Singleton.Get().GetType().Name));
+            Console.WriteLine(String.Format(
+                "* I have got: {0}",
+                domain.Ordered0.Get().GetType().Name));
+            Console.WriteLine(String.Format(
+                "* I have got: {0}",
+                domain.Ordered1.Get().GetType().Name));
             Console.WriteLine("press ENTER to exit");
             Console.ReadLine();
         }

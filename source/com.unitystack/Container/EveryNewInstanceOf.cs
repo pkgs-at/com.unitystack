@@ -16,7 +16,8 @@
  */
 
 using System;
-using System.Collections.Specialized;
+using System.Reflection;
+using System.Collections.Generic;
 
 namespace UnityStack.Container
 {
@@ -28,11 +29,13 @@ namespace UnityStack.Container
 
         private readonly InstanceTypeForName[] _types;
 
+        private Domain _domain;
+
         private Type _type;
 
-        private bool _hasInjectableConstructor;
+        private ConstructorInfo _injectableConstructor;
 
-        private NameValueCollection _properties;
+        private IDictionary<string, string> _properties;
 
         public EveryNewInstanceOf(params InstanceTypeForName[] types)
         {
@@ -41,11 +44,13 @@ namespace UnityStack.Container
         }
 
         internal override void Configure(
+            Domain domain,
             string name,
-            NameValueCollection properties)
+            IDictionary<string, string> properties)
         {
             InstanceTypeForName type;
 
+            this._domain = domain;
             if (this._type != null)
                 throw new InvalidOperationException(
                     "container already configured");
@@ -62,8 +67,8 @@ namespace UnityStack.Container
                 throw new ArgumentException(
                     "type not found for: " + name);
             this._type = type.Type;
-            this._hasInjectableConstructor =
-                this._type.GetConstructor(new Type[] { this.GetType() }) != null;
+            this._injectableConstructor =
+                this._type.GetConstructor(new Type[] { this._domain.GetType() });
             this._properties = properties;
         }
 
@@ -74,16 +79,34 @@ namespace UnityStack.Container
             if (this._type == null)
                 throw new InvalidOperationException(
                     "container not configured");
-            if (this._hasInjectableConstructor)
+            try
             {
-                instance = (InstanceType)Activator.CreateInstance(
-                    this._type,
-                    this);
+                if (this._injectableConstructor != null)
+                {
+                    instance = (InstanceType)Activator.CreateInstance(
+                        this._type,
+                        this._domain);
+                }
+                else
+                {
+                    instance = (InstanceType)Activator.CreateInstance(
+                        this._type);
+                }
             }
-            else
+            catch (TargetInvocationException throwable)
             {
-                instance = (InstanceType)Activator.CreateInstance(
-                    this._type);
+                Exception cause;
+
+                cause = throwable.InnerException;
+                throw new TargetInvocationException(
+                    String.Format(
+                        "failed on invoke constructor of {0}" +
+                        " (target throws exception: {1}: {2})" +
+                        " see InnerException for more detail",
+                        this._type.FullName,
+                        cause.GetType().FullName,
+                        cause.Message),
+                    cause);
             }
             if (instance is Configurable)
                 ((Configurable)instance).Configure(this._properties);

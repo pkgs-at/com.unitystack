@@ -17,7 +17,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 
 namespace UnityStack.Container.Configuration
 {
@@ -32,12 +31,12 @@ namespace UnityStack.Container.Configuration
 
             private string _name;
 
-            private NameValueCollection _properties;
+            private IDictionary<string, string> _properties;
 
             public InstanceSetting(
                 string fieldName,
                 string name,
-                NameValueCollection properties)
+                IDictionary<string, string> properties)
             {
                 if (fieldName == null) throw new ArgumentNullException();
                 if (name == null) throw new ArgumentNullException();
@@ -63,7 +62,7 @@ namespace UnityStack.Container.Configuration
                 }
             }
 
-            public NameValueCollection Properties
+            public IDictionary<string, string> Properties
             {
                 get
                 {
@@ -86,7 +85,7 @@ namespace UnityStack.Container.Configuration
             {
                 InstanceSetting setting;
 
-                if (!this._instances.TryGetValue(fieldName, out setting))
+                if (this._instances.TryGetValue(fieldName, out setting))
                     return setting;
                 throw new InvalidOperationException(
                     fieldName + " is not configured");
@@ -102,7 +101,10 @@ namespace UnityStack.Container.Configuration
             this._instances[fieldName] = setting;
         }
 
-        protected void Set(string fieldName, string name, NameValueCollection properties)
+        protected void Set(
+            string fieldName,
+            string name,
+            IDictionary<string, string> properties)
         {
             this.Set(
                 fieldName,

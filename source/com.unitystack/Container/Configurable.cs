@@ -16,7 +16,7 @@
  */
 
 using System;
-using System.Collections.Specialized;
+using System.Collections.Generic;
 
 namespace UnityStack.Container
 {
@@ -24,7 +24,7 @@ namespace UnityStack.Container
     public interface Configurable
     {
 
-        void Configure(NameValueCollection properties);
+        void Configure(IDictionary<string, string> properties);
 
     }
 

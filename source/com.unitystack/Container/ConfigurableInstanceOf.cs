@@ -16,7 +16,7 @@
  */
 
 using System;
-using System.Collections.Specialized;
+using System.Collections.Generic;
 
 namespace UnityStack.Container
 {
@@ -25,8 +25,9 @@ namespace UnityStack.Container
     {
 
         internal abstract void Configure(
+            Domain domain,
             string name,
-            NameValueCollection properties);
+            IDictionary<string, string> properties);
 
     }
 
