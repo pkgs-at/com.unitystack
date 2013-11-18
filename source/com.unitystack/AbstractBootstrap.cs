@@ -232,7 +232,7 @@ namespace UnityStack
             }
         }
 
-        protected virtual void Intialize()
+        protected virtual void Initialize()
         {
             this._resourcePath = AbstractBootstrap._path;
             this.Initialize(this._logManager);
@@ -291,7 +291,7 @@ namespace UnityStack
                     "Bootstrap is not instance of AbstractBootstrap");
             AbstractBootstrap._instance =
                 (AbstractBootstrap)Activator.CreateInstance(target);
-            AbstractBootstrap._instance.Intialize();
+            AbstractBootstrap._instance.Initialize();
         }
 
         public static AbstractBootstrap Instance

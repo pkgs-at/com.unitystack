@@ -25,6 +25,8 @@ namespace UnityStack.Base
     public abstract class BaseBehaviour : MonoBehaviour
     {
 
+        private bool _initialized;
+
         private Log _log;
 
         protected Log Log
@@ -51,11 +53,13 @@ namespace UnityStack.Base
         protected virtual void Awake()
         {
             this.Initialize();
+            this._initialized = true;
         }
 
         protected virtual void OnDestroy()
         {
-            this.Teardown();
+            if (this._initialized)
+                this.Teardown();
         }
 
     }

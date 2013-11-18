@@ -17,7 +17,6 @@
 
 using System;
 using System.IO;
-using At.Pkgs.Logging;
 using UnityStack;
 using UnityStack.Container.Configuration;
 using Core;
@@ -27,13 +26,20 @@ public class Bootstrap : AbstractBootstrap
 
     private RootDomain _rootDomain;
 
+    public Bootstrap()
+    {
+        this._rootDomain = new RootDomain();
+    }
+
     protected virtual void Initialize(RootDomain domain)
     {
         BasicDomainConfiguration configuration;
         Stream stream;
 
         configuration = new BasicDomainConfiguration();
-        stream = this.GetResourceAsStream("BaseSettings/RootDomain.xml", true);
+        stream = this.GetResourceAsStream(
+            "BaseSettings/RootDomain.xml",
+            true);
         try
         {
             configuration.Load(stream);
@@ -42,7 +48,9 @@ public class Bootstrap : AbstractBootstrap
         {
             stream.Close();
         }
-        stream = this.GetResourceAsStream("LocalSettings/RootDomain.xml", false);
+        stream = this.GetResourceAsStream(
+            "LocalSettings/RootDomain.xml",
+            false);
         if (stream != null)
         {
             try
@@ -57,10 +65,9 @@ public class Bootstrap : AbstractBootstrap
         domain.Initialize(configuration);
     }
 
-    protected override void Intialize()
+    protected override void Initialize()
     {
-        base.Intialize();
-        this._rootDomain = new RootDomain();
+        base.Initialize();
         this.Initialize(this._rootDomain);
     }
 
