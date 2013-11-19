@@ -239,7 +239,7 @@ namespace UnityStack.Editor
                     type = AbstractBootstrap.Instance.GetType(name);
                 if (!typeof(BaseBatch).IsAssignableFrom(type))
                     throw new ArgumentException(String.Format(
-                        "invalid class for Batch: {0}",
+                        "invalid class for batch: {0}",
                         type.FullName));
                 batch = (BaseBatch)Activator.CreateInstance(type);
                 this.Exit(batch.Main(this.GetSubArguments(1)));
