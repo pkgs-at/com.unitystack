@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{95EB5B9D-5B1E-4CB2-B014-06EC83AE8A17}</ProjectGuid>
+    <ProjectGuid>{BCA90FDE-9C80-4CE1-9BBC-DD6516E3FACB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UnityStack</RootNamespace>
-    <AssemblyName>UnityStack</AssemblyName>
+    <RootNamespace>UnityStack.Editor</RootNamespace>
+    <AssemblyName>UnityStack.Editor</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -18,58 +18,41 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\UnityDebug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;UNITY</DefineConstants>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <CodeAnalysisFailOnMissingRules>true</CodeAnalysisFailOnMissingRules>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UnityRelease|AnyCPU'">
     <OutputPath>bin\UnityRelease\</OutputPath>
     <DefineConstants>TRACE;UNITY</DefineConstants>
     <Optimize>true</Optimize>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
+    <Reference Include="UnityEditor">
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Unity\Editor\Data\Managed\UnityEditor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Unity\Editor\Data\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbstractBootstrap.cs" />
-    <Compile Include="Base\BaseBehaviour.cs" />
-    <Compile Include="Container\ActivateOrdered.cs" />
-    <Compile Include="Container\Configurable.cs" />
-    <Compile Include="Container\ConfigurableInstanceOf.cs" />
-    <Compile Include="Container\Configuration\BasicDomainConfiguration.cs" />
-    <Compile Include="Container\Configuration\DomainConfiguration.cs" />
-    <Compile Include="Future.cs" />
-    <Compile Include="Container\Domain.cs" />
-    <Compile Include="Container\InstanceOf.cs" />
-    <Compile Include="Container\InstanceTypeForName.cs" />
-    <Compile Include="Container\EveryNewInstanceOf.cs" />
-    <Compile Include="Container\ImmediateInstanceOf.cs" />
-    <Compile Include="Container\SingletonInstanceOf.cs" />
-    <Compile Include="FutureExceptionEventHandlerChain.cs" />
-    <Compile Include="FutureTask.cs" />
-    <Compile Include="HandledFutureException.cs" />
-    <Compile Include="Logging\UnityLogWriter.cs" />
-    <Compile Include="Logging\UnityDebugAppender.cs" />
-    <Compile Include="Logging\UnityLoggingConfiguration.cs" />
+    <Compile Include="Base\BaseBatch.cs" />
+    <Compile Include="Batch\ExecuteMenuItems.cs" />
+    <Compile Include="Runner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Vendor\At.Pkgs.Util\Strings.cs" />
-    <Compile Include="Vendor\At.Pkgs.Util\XmlScanner.cs" />
-    <Compile Include="Yields.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\at.pkgs.logging\at.pkgs.logging.csproj">
@@ -77,8 +60,12 @@
       <Name>at.pkgs.logging</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\com.unitystack\com.unitystack.csproj">
+      <Project>{95EB5B9D-5B1E-4CB2-B014-06EC83AE8A17}</Project>
+      <Name>com.unitystack</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>COPY /Y $(TargetDir)* $(SolutionDir)..\binary\$(ConfigurationName)\</PostBuildEvent>

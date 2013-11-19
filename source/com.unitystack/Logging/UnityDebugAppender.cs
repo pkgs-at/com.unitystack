@@ -26,6 +26,26 @@ namespace UnityStack.Logging
     public class UnityDebugAppender : FormatAppender
     {
 
+        private UnityLogWriter _writer;
+
+        public UnityDebugAppender()
+        {
+            this._writer = null;
+        }
+
+        public UnityLogWriter Writer
+        {
+            get
+            {
+                return this._writer;
+            }
+            set
+            {
+                if (value == null) throw new ArgumentNullException();
+                this._writer = value;
+            }
+        }
+
         protected override void Append(LogEntity entity, string formatted)
         {
             try
@@ -43,6 +63,8 @@ namespace UnityStack.Logging
                         Debug.Log(formatted);
                         break;
                 }
+                if (this._writer != null)
+                    this._writer.WriteLog(entity, formatted);
             }
             catch
             {
