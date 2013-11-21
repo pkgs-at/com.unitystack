@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.unitystack.test", "com.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.unitystack.editor", "com.unitystack.editor\com.unitystack.editor.csproj", "{BCA90FDE-9C80-4CE1-9BBC-DD6516E3FACB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.unitystack.editor.runner", "com.unitystack.editor.runner\com.unitystack.editor.runner.csproj", "{DD1DCCE0-935D-437C-B08C-0C3D75E1B703}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -149,6 +151,26 @@ Global
 		{BCA90FDE-9C80-4CE1-9BBC-DD6516E3FACB}.UnityRelease|Mixed Platforms.ActiveCfg = UnityRelease|Any CPU
 		{BCA90FDE-9C80-4CE1-9BBC-DD6516E3FACB}.UnityRelease|Mixed Platforms.Build.0 = UnityRelease|Any CPU
 		{BCA90FDE-9C80-4CE1-9BBC-DD6516E3FACB}.UnityRelease|x86.ActiveCfg = UnityRelease|Any CPU
+		{DD1DCCE0-935D-437C-B08C-0C3D75E1B703}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD1DCCE0-935D-437C-B08C-0C3D75E1B703}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD1DCCE0-935D-437C-B08C-0C3D75E1B703}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{DD1DCCE0-935D-437C-B08C-0C3D75E1B703}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{DD1DCCE0-935D-437C-B08C-0C3D75E1B703}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DD1DCCE0-935D-437C-B08C-0C3D75E1B703}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD1DCCE0-935D-437C-B08C-0C3D75E1B703}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD1DCCE0-935D-437C-B08C-0C3D75E1B703}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{DD1DCCE0-935D-437C-B08C-0C3D75E1B703}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{DD1DCCE0-935D-437C-B08C-0C3D75E1B703}.Release|x86.ActiveCfg = Release|Any CPU
+		{DD1DCCE0-935D-437C-B08C-0C3D75E1B703}.UnityDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD1DCCE0-935D-437C-B08C-0C3D75E1B703}.UnityDebug|Any CPU.Build.0 = Debug|Any CPU
+		{DD1DCCE0-935D-437C-B08C-0C3D75E1B703}.UnityDebug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{DD1DCCE0-935D-437C-B08C-0C3D75E1B703}.UnityDebug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{DD1DCCE0-935D-437C-B08C-0C3D75E1B703}.UnityDebug|x86.ActiveCfg = Debug|Any CPU
+		{DD1DCCE0-935D-437C-B08C-0C3D75E1B703}.UnityRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{DD1DCCE0-935D-437C-B08C-0C3D75E1B703}.UnityRelease|Any CPU.Build.0 = Release|Any CPU
+		{DD1DCCE0-935D-437C-B08C-0C3D75E1B703}.UnityRelease|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{DD1DCCE0-935D-437C-B08C-0C3D75E1B703}.UnityRelease|Mixed Platforms.Build.0 = Release|Any CPU
+		{DD1DCCE0-935D-437C-B08C-0C3D75E1B703}.UnityRelease|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

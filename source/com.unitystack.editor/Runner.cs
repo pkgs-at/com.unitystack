@@ -16,16 +16,12 @@
  */
 
 using System;
-using System.Diagnostics;
 using System.Collections.Generic;
-using System.Text;
-using System.IO;
-using System.Net;
 using System.Net.Sockets;
 using At.Pkgs.Logging;
 using UnityEditor;
-using UnityStack;
 using UnityStack.Logging;
+using UnityStack.Editor.Protocol;
 using UnityStack.Editor.Base;
 
 namespace UnityStack.Editor
@@ -34,11 +30,7 @@ namespace UnityStack.Editor
     public class Runner : UnityLogWriter
     {
 
-        private static readonly Encoding _encoding = new UTF8Encoding();
-
-        private TcpClient _client;
-
-        private BinaryWriter _writer;
+        private RunnerServerConnection _connection;
 
         private string[] _arguments;
 
@@ -70,14 +62,8 @@ namespace UnityStack.Editor
                 this._arguments = list.ToArray();
             }
             {
-                Stream stream;
-
-                this._client = new TcpClient(
-                    hostname,
-                    port);
-                stream = new BufferedStream(this._client.GetStream());
-                this._writer = new BinaryWriter(stream);
-                this.WriteHead();
+                this._connection =
+                    new RunnerServerConnection(new TcpClient(hostname, port));
             }
             {
                 LogManager manager;
@@ -110,122 +96,32 @@ namespace UnityStack.Editor
             return arguments;
         }
 
-        private void WriteByte(byte value)
-        {
-            this._writer.Write(value);
-        }
-
-        private void WriteSByte(sbyte value)
-        {
-            this.WriteByte((byte)value);
-        }
-
-        private void WriteBytes(byte[] values)
-        {
-            this._writer.Write(values);
-        }
-
-        private void WriteInt16(short value)
-        {
-            this._writer.Write(IPAddress.HostToNetworkOrder(value));
-        }
-
-        private void WriteUInt16(ushort value)
-        {
-            this.WriteInt16((short)value);
-        }
-
-        private void WriteInt32(int value)
-        {
-            this._writer.Write(IPAddress.HostToNetworkOrder(value));
-        }
-
-        private void WriteUInt32(uint value)
-        {
-            this.WriteInt32((int)value);
-        }
-
-        private void WriteInt64(long value)
-        {
-            this._writer.Write(IPAddress.HostToNetworkOrder(value));
-        }
-
-        private void WriteUInt64(ulong value)
-        {
-            this.WriteInt64((long)value);
-        }
-
-        private void WriteString(string value)
-        {
-            byte[] bytes;
-            long length;
-
-            bytes = _encoding.GetBytes(value);
-            length = bytes.LongLength;
-            if (length > UInt32.MaxValue)
-                throw new ArgumentOutOfRangeException();
-            this.WriteUInt32((uint)bytes.LongLength);
-            this.WriteBytes(bytes);
-        }
-
-        private void Flush()
-        {
-            this._writer.Flush();
-        }
-
-        private void Close()
-        {
-            this._writer.Close();
-            this._client.Close();
-        }
-
-        private void WriteHead()
-        {
-            lock (this._writer)
-            {
-                this.WriteUInt32(0x1981ACE2);
-                this.WriteInt32(Process.GetCurrentProcess().Id);
-            }
-        }
-
         public void WriteLog(LogEntity entity, string message)
         {
-            lock (this._writer)
+            lock (this._connection)
             {
-                this.WriteByte(0x01);
-                this.WriteString(message);
-                this.Flush();
+                this._connection.Log(message);
             }
         }
 
-        private void WriteTail(int code)
-        {
-            lock (this._writer)
-            {
-                this.WriteByte(0xFE);
-                this.WriteByte((byte)code);
-                this.Flush();
-            }
-        }
-
-        protected virtual void Exit(int code)
+        protected void Exit(int code)
         {
             try
             {
-                this._log.Notice(
-                    "terminating with code: {0}",
-                    code);
-                this.WriteTail(code);
-                this.Close();
+                this._connection.Exit(code);
+                this._connection.Close();
             }
             finally
             {
-                UnityEditor.EditorApplication.Exit(code);
+                EditorApplication.Exit(code);
             }
         }
 
         protected void ExecuteBatch()
         {
+            int code;
+
+            code = -1;
             try
             {
                 string name;
@@ -242,12 +138,15 @@ namespace UnityStack.Editor
                         "invalid class for batch: {0}",
                         type.FullName));
                 batch = (BaseBatch)Activator.CreateInstance(type);
-                this.Exit(batch.Main(this.GetSubArguments(1)));
+                code = batch.Main(this.GetSubArguments(1));
             }
             catch (Exception throwable)
             {
                 this._log.Error(throwable, "abort");
-                this.Exit(-1);
+            }
+            finally
+            {
+                this.Exit(code);
             }
         }
 

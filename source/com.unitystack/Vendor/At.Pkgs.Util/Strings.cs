@@ -29,7 +29,10 @@ namespace At.Pkgs.Util
 
         public static string PrepareFormat(Type keys, string format)
         {
-            return _prepareFormatRegex.Replace(format, delegate(Match match)
+            Regex regex;
+
+            regex = _prepareFormatRegex;
+            return regex.Replace(format, delegate(Match match)
             {
                 return Enum.Format(keys, Enum.Parse(keys, match.Value), "D");
             });
@@ -40,10 +43,29 @@ namespace At.Pkgs.Util
 
         public static string ReversePreparedFormat(Type keys, string format)
         {
-            return _reversePreparedFormatRegex.Replace(format, delegate(Match match)
+            Regex regex;
+
+            regex = _reversePreparedFormatRegex;
+            return regex.Replace(format, delegate(Match match)
             {
                 return Enum.Format(keys, Enum.Parse(keys, match.Value), "G");
             });
+        }
+
+        private static readonly Regex _quoteCommandLineArgumentRegex =
+            new Regex(@"\\*(?:""|$)");
+
+        public static string QuoteCommandLineArgument(string argument)
+        {
+            Regex regex;
+            string escaped;
+
+            regex = _quoteCommandLineArgumentRegex;
+            escaped = regex.Replace(argument, delegate(Match match)
+            {
+                return new String('\\', match.Value.Length) + match.Value;
+            });
+            return "\"" + escaped + "\"";
         }
 
     }

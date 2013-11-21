@@ -27,21 +27,23 @@ namespace UnityStack.Editor.Batch
 
         public override int Main(string[] arguments)
         {
-            int index;
+            ExecuteMenuItemsParameter parameter;
+            int number;
 
             this.Log.Notice("start");
-            for (index = 0; index < arguments.Length; index++)
+            parameter = new ExecuteMenuItemsParameter();
+            parameter.FromArguments(arguments);
+            number = 0;
+            foreach (string item in parameter)
             {
-                string command;
-
-                command = arguments[index];
-                this.Log.Notice("execute: ", command);
-                if (!EditorApplication.ExecuteMenuItem(command))
+                ++number;
+                this.Log.Notice("execute menu: {0}", item);
+                if (!EditorApplication.ExecuteMenuItem(item))
                 {
                     this.Log.Error(
-                        "failed on execute: {0}",
-                        command);
-                    return index + 1;
+                        "failed on execute meun: {0}",
+                        item);
+                    return number;
                 }
             }
             this.Log.Notice("complete");
