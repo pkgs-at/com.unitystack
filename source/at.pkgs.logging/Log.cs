@@ -111,7 +111,12 @@ namespace At.Pkgs.Logging
             return frames;
         }
 
-        public void Append(int depth, LogLevel level, Exception throwable, string format, params object[] arguments)
+        public void Append(
+            int depth,
+            LogLevel level,
+            Exception throwable,
+            string format,
+            params object[] arguments)
         {
             LogManager manager;
             LogEntity entity;
@@ -128,8 +133,10 @@ namespace At.Pkgs.Logging
                 entity.ManagedThreadId = Thread.CurrentThread.ManagedThreadId;
             entity.Source = this;
             entity.Level = level;
-            entity.Frames = this.Frames(++depth, manager.LogFrameDepth, manager.LogExtendedFrame);
-            entity.Message = arguments.Length <= 0 ? format : String.Format(format, arguments);
+            entity.Frames =
+                this.Frames(++depth, manager.LogFrameDepth, manager.LogExtendedFrame);
+            entity.Message =
+                arguments.Length <= 0 ? format : String.Format(format, arguments);
             entity.Cause = throwable;
             manager.Append(entity);
         }
@@ -145,7 +152,8 @@ namespace At.Pkgs.Logging
             }
         }
 
-        public void Trace(string message)
+        public void Trace(
+            string message)
         {
             LogLevel level;
 
@@ -154,7 +162,9 @@ namespace At.Pkgs.Logging
             this.Append(1, level, null, message);
         }
 
-        public void Trace(string format, params object[] arguments)
+        public void Trace(
+            string format,
+            params object[] arguments)
         {
             LogLevel level;
 
@@ -163,7 +173,9 @@ namespace At.Pkgs.Logging
             this.Append(1, level, null, format, arguments);
         }
 
-        public void Trace(Exception cause, string message)
+        public void Trace(
+            Exception cause,
+            string message)
         {
             LogLevel level;
 
@@ -172,7 +184,10 @@ namespace At.Pkgs.Logging
             this.Append(1, level, cause, message);
         }
 
-        public void Trace(Exception cause, string format, params object[] arguments)
+        public void Trace(
+            Exception cause,
+            string format,
+            params object[] arguments)
         {
             LogLevel level;
 
@@ -192,7 +207,8 @@ namespace At.Pkgs.Logging
             }
         }
 
-        public void Debug(string message)
+        public void Debug(
+            string message)
         {
             LogLevel level;
 
@@ -201,7 +217,9 @@ namespace At.Pkgs.Logging
             this.Append(1, level, null, message);
         }
 
-        public void Debug(string format, params object[] arguments)
+        public void Debug(
+            string format,
+            params object[] arguments)
         {
             LogLevel level;
 
@@ -210,7 +228,9 @@ namespace At.Pkgs.Logging
             this.Append(1, level, null, format, arguments);
         }
 
-        public void Debug(Exception cause, string message)
+        public void Debug(
+            Exception cause,
+            string message)
         {
             LogLevel level;
 
@@ -219,7 +239,10 @@ namespace At.Pkgs.Logging
             this.Append(1, level, cause, message);
         }
 
-        public void Debug(Exception cause, string format, params object[] arguments)
+        public void Debug(
+            Exception cause,
+            string format,
+            params object[] arguments)
         {
             LogLevel level;
 
@@ -239,7 +262,8 @@ namespace At.Pkgs.Logging
             }
         }
 
-        public void Notice(string message)
+        public void Notice(
+            string message)
         {
             LogLevel level;
 
@@ -248,7 +272,9 @@ namespace At.Pkgs.Logging
             this.Append(1, level, null, message);
         }
 
-        public void Notice(string format, params object[] arguments)
+        public void Notice(
+            string format,
+            params object[] arguments)
         {
             LogLevel level;
 
@@ -257,7 +283,9 @@ namespace At.Pkgs.Logging
             this.Append(1, level, null, format, arguments);
         }
 
-        public void Notice(Exception cause, string message)
+        public void Notice(
+            Exception cause,
+            string message)
         {
             LogLevel level;
 
@@ -266,7 +294,10 @@ namespace At.Pkgs.Logging
             this.Append(1, level, cause, message);
         }
 
-        public void Notice(Exception cause, string format, params object[] arguments)
+        public void Notice(
+            Exception cause,
+            string format,
+            params object[] arguments)
         {
             LogLevel level;
 
@@ -286,7 +317,8 @@ namespace At.Pkgs.Logging
             }
         }
 
-        public void Error(string message)
+        public void Error(
+            string message)
         {
             LogLevel level;
 
@@ -295,7 +327,9 @@ namespace At.Pkgs.Logging
             this.Append(1, level, null, message);
         }
 
-        public void Error(string format, params object[] arguments)
+        public void Error(
+            string format,
+            params object[] arguments)
         {
             LogLevel level;
 
@@ -304,7 +338,9 @@ namespace At.Pkgs.Logging
             this.Append(1, level, null, format, arguments);
         }
 
-        public void Error(Exception cause, string message)
+        public void Error(
+            Exception cause,
+            string message)
         {
             LogLevel level;
 
@@ -313,7 +349,10 @@ namespace At.Pkgs.Logging
             this.Append(1, level, cause, message);
         }
 
-        public void Error(Exception cause, string format, params object[] arguments)
+        public void Error(
+            Exception cause,
+            string format,
+            params object[] arguments)
         {
             LogLevel level;
 
@@ -333,7 +372,8 @@ namespace At.Pkgs.Logging
             }
         }
 
-        public void Fatal(string message)
+        public void Fatal(
+            string message)
         {
             LogLevel level;
 
@@ -342,7 +382,9 @@ namespace At.Pkgs.Logging
             this.Append(1, level, null, message);
         }
 
-        public void Fatal(string format, params object[] arguments)
+        public void Fatal(
+            string format,
+            params object[] arguments)
         {
             LogLevel level;
 
@@ -351,7 +393,9 @@ namespace At.Pkgs.Logging
             this.Append(1, level, null, format, arguments);
         }
 
-        public void Fatal(Exception cause, string message)
+        public void Fatal(
+            Exception cause,
+            string message)
         {
             LogLevel level;
 
@@ -360,7 +404,10 @@ namespace At.Pkgs.Logging
             this.Append(1, level, cause, message);
         }
 
-        public void Fatal(Exception cause, string format, params object[] arguments)
+        public void Fatal(
+            Exception cause,
+            string format,
+            params object[] arguments)
         {
             LogLevel level;
 

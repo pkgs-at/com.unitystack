@@ -21,7 +21,7 @@ using System.Diagnostics;
 namespace At.Pkgs.Logging
 {
 
-    public struct LogEntity
+    public class LogEntity
     {
 
         public DateTime Timestamp;
