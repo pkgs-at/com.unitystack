@@ -204,6 +204,20 @@ namespace UnityStack
             return this.GetResourceAsStream(path, false);
         }
 
+        public virtual string BaseSettingPathFor(string path)
+        {
+            return Paths.Combine(
+                "BaseSettings",
+                path);
+        }
+
+        public virtual string LocalSettingPathFor(string path)
+        {
+            return Paths.Combine(
+                "LocalSettings",
+                path);
+        }
+
         protected virtual void Initialize(LogManager manager)
         {
             UnityLoggingConfiguration configuration;
@@ -211,7 +225,8 @@ namespace UnityStack
 
             configuration =
                 new UnityLoggingConfiguration(manager, this.ResourcePath);
-            stream = this.GetResourceAsStream("BaseSettings/Logging.xml", true);
+            stream = this.GetResourceAsStream(
+                this.BaseSettingPathFor("Logging.xml"), true);
             try
             {
                 configuration.Load(stream);
@@ -220,7 +235,8 @@ namespace UnityStack
             {
                 stream.Close();
             }
-            stream = this.GetResourceAsStream("LocalSettings/Logging.xml", false);
+            stream = this.GetResourceAsStream(
+                this.LocalSettingPathFor("Logging.xml"), false);
             if (stream == null) return;
             try
             {

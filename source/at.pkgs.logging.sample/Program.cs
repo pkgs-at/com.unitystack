@@ -323,7 +323,7 @@ Appender#0 2013-11-11T13:12:11.905 NOTICE  At.Pkgs.Logging.Sample.Program messag
             /*
 Appender#0 2013-11-11T13:12:11.906 NOTICE  At.Pkgs.Logging.Sample.Program single appender
              */
-            this.Log.Error("multipul appenders");
+            this.Log.Error("multiple appenders");
             /*
 Appender#0 2013-11-11T13:12:11.906 ERROR   At.Pkgs.Logging.Sample.Program multipul appenders
 Appender#1 2013-11-11T13:12:11.906 ERROR   At.Pkgs.Logging.Sample.Program multipul appenders
