@@ -54,7 +54,15 @@ namespace At.Pkgs.Logging.Sink
                 Appender old;
 
                 if (value == null) throw new ArgumentNullException();
+#if UNITY
+                lock (this._appenders)
+                {
+                    old = this._appenders[index];
+                    this._appenders[index] = value;
+                }
+#else
                 old = Interlocked.Exchange(ref this._appenders[index], value);
+#endif
                 if (old == value) return;
                 old.Flush();
                 old.Close();
