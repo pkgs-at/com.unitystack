@@ -53,6 +53,8 @@
     <Compile Include="Container\ConfigurableInstanceOf.cs" />
     <Compile Include="Container\Configuration\BasicDomainConfiguration.cs" />
     <Compile Include="Container\Configuration\DomainConfiguration.cs" />
+    <Compile Include="CoroutineDriver.cs" />
+    <Compile Include="CoroutineDriverOfUnity.cs" />
     <Compile Include="Future.cs" />
     <Compile Include="Container\Domain.cs" />
     <Compile Include="Container\InstanceOf.cs" />
