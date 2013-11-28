@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{DD1DCCE0-935D-437C-B08C-0C3D75E1B703}</ProjectGuid>
@@ -55,10 +55,12 @@
     <ProjectReference Include="..\com.unitystack.editor\com.unitystack.editor.csproj">
       <Project>{BCA90FDE-9C80-4CE1-9BBC-DD6516E3FACB}</Project>
       <Name>com.unitystack.editor</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\com.unitystack\com.unitystack.csproj">
       <Project>{95EB5B9D-5B1E-4CB2-B014-06EC83AE8A17}</Project>
       <Name>com.unitystack</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

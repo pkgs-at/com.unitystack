@@ -14,6 +14,25 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UnityDebug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\UnityDebug\</OutputPath>
@@ -53,8 +72,8 @@
     <Compile Include="Container\ConfigurableInstanceOf.cs" />
     <Compile Include="Container\Configuration\BasicDomainConfiguration.cs" />
     <Compile Include="Container\Configuration\DomainConfiguration.cs" />
-    <Compile Include="CoroutineDriver.cs" />
-    <Compile Include="CoroutineDriverOfUnity.cs" />
+    <Compile Include="CoroutineMotor.cs" />
+    <Compile Include="CoroutineMotorOfUnityInternal.cs" />
     <Compile Include="Future.cs" />
     <Compile Include="Container\Domain.cs" />
     <Compile Include="Container\InstanceOf.cs" />
@@ -72,6 +91,7 @@
     <Compile Include="Vendor\At.Pkgs.Util\Strings.cs" />
     <Compile Include="Vendor\At.Pkgs.Util\XmlScanner.cs" />
     <Compile Include="Yields.cs" />
+    <Compile Include="CoroutineMotorOfUnity.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\at.pkgs.logging\at.pkgs.logging.csproj">
@@ -83,7 +103,8 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>COPY /Y $(TargetDir)* $(SolutionDir)..\binary\$(ConfigurationName)\</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -17,78 +17,49 @@
 
 using System;
 using System.Collections;
-using At.Pkgs.Logging;
-using UnityEngine;
 
-namespace UnityStack.Base
+namespace UnityStack
 {
 
-    public abstract class BaseBehaviour : MonoBehaviour, CoroutineMotor
+    public class CoroutineMotorOfUnity : CoroutineMotor
     {
 
-        private bool _initialized;
+        private CoroutineMotorOfUnityInternal _component;
 
-        private Log _log;
+        public CoroutineMotorOfUnity()
+        {
+            this._component = null;
+        }
 
-        protected Log Log
+        protected CoroutineMotorOfUnityInternal Component
         {
             get
             {
-                return this._log;
+                lock (this)
+                {
+                    if (this._component == null)
+                        this._component = CoroutineMotorOfUnityInternal.CreateInstance();
+                }
+                return this._component;
             }
-        }
-
-        protected virtual void Initialize()
-        {
-            this._log = AbstractBootstrap.Instance.LogManager.LogFor(this);
-            if (this._log.TraceEnabled)
-                this._log.Trace("initialize");
-        }
-
-        protected virtual void Teardown()
-        {
-            if (this._log.TraceEnabled)
-                this._log.Trace("teardown");
-        }
-
-        protected virtual void Awake()
-        {
-            this.Initialize();
-            this._initialized = true;
-        }
-
-        protected virtual void OnDestroy()
-        {
-            if (this._initialized)
-                this.Teardown();
-        }
-
-        private IEnumerator InvokeLatorMain(
-            IEnumerator routine,
-            Action completed)
-        {
-            yield return routine;
-            completed();
         }
 
         public void InvokeLator(
             IEnumerator routine,
             Action completed)
         {
-            this.StartCoroutine(
-                this.InvokeLatorMain(
-                    routine,
-                    completed));
+            this.Component.InvokeLator(
+                routine,
+                completed);
         }
 
         public void InvokeLator(
             IEnumerable routine,
             Action completed)
         {
-            this.StartCoroutine(
-                this.InvokeLatorMain(
-                    routine.GetEnumerator(),
-                    completed));
+            this.Component.InvokeLator(
+                routine,
+                completed);
         }
 
         public void InvokeLator<ResultType>(
@@ -96,9 +67,10 @@ namespace UnityStack.Base
             FutureCompleted<ResultType> completed,
             params FutureExceptionEventHandler[] handlers)
         {
-            foreach (FutureExceptionEventHandler handler in handlers)
-                future.FutureException += handler;
-            this.StartCoroutine(future.Poll(completed));
+            this.Component.InvokeLator(
+                future,
+                completed,
+                handlers);
         }
 
         public void InvokeLator<ResultType>(
@@ -106,10 +78,10 @@ namespace UnityStack.Base
             FutureExceptionEventHandler handler0,
             FutureCompleted<ResultType> completed)
         {
-            this.InvokeLator(
+            this.Component.InvokeLator(
                 future,
-                completed,
-                handler0);
+                handler0,
+                completed);
         }
 
         public void InvokeLator<ResultType>(
@@ -118,11 +90,11 @@ namespace UnityStack.Base
             FutureExceptionEventHandler handler1,
             FutureCompleted<ResultType> completed)
         {
-            this.InvokeLator(
+            this.Component.InvokeLator(
                 future,
-                completed,
                 handler0,
-                handler1);
+                handler1,
+                completed);
         }
 
         public void InvokeLator<ResultType>(
@@ -132,12 +104,12 @@ namespace UnityStack.Base
             FutureExceptionEventHandler handler2,
             FutureCompleted<ResultType> completed)
         {
-            this.InvokeLator(
+            this.Component.InvokeLator(
                 future,
-                completed,
                 handler0,
                 handler1,
-                handler2);
+                handler2,
+                completed);
         }
 
         public void InvokeLator<ResultType>(
@@ -148,36 +120,37 @@ namespace UnityStack.Base
             FutureExceptionEventHandler handler3,
             FutureCompleted<ResultType> completed)
         {
-            this.InvokeLator(
+            this.Component.InvokeLator(
                 future,
-                completed,
                 handler0,
                 handler1,
                 handler2,
-                handler3);
+                handler3,
+                completed);
         }
 
         public object Execute(
             IEnumerator routine)
         {
-            return this.StartCoroutine(routine);
+            return this.Component.Execute(
+                routine);
         }
 
         public object Execute(
             IEnumerable routine)
         {
-            return this.StartCoroutine(routine.GetEnumerator());
+            return this.Component.Execute(
+                routine);
         }
 
         public object Execute(
             Future future,
             params FutureExceptionEventHandler[] handlers)
         {
-            foreach (FutureExceptionEventHandler handler in handlers)
-                future.FutureException += handler;
-            return this.StartCoroutine(future.Poll());
+            return this.Component.Execute(
+                future,
+                handlers);
         }
-
     }
 
 }

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="build-all">
+	<property file="./build.properties"/>
+	<target name="build-project-as">
+		<echo>configuration: ${configuration}</echo>
+		<exec
+				dir="${project.path}"
+				executable="${dotnet.path}/MSBuild.exe"
+				failonerror="true">
+			<arg value="/nologo"/>
+			<arg value="/property:Configuration=${configuration}"/>
+		</exec>
+		<exec
+				dir="${project.path}/bin/${configuration}"
+				executable="${mono.path}/pdb2mdb.exe"
+				failonerror="true">
+			<arg value="${output.name}"/>
+		</exec>
+	</target>
+	<target name="build-at-pkgs-logging">
+		<antcall target="build-project-as">
+			<param name="project.path" value="../at.pkgs.logging"/>
+			<param name="output.name" value="At.Pkgs.Logging.dll"/>
+			<param name="configuration" value="Debug"/>
+		</antcall>
+		<antcall target="build-project-as">
+			<param name="project.path" value="../at.pkgs.logging"/>
+			<param name="output.name" value="At.Pkgs.Logging.dll"/>
+			<param name="configuration" value="UnityDebug"/>
+		</antcall>
+		<antcall target="build-project-as">
+			<param name="project.path" value="../at.pkgs.logging"/>
+			<param name="output.name" value="At.Pkgs.Logging.dll"/>
+			<param name="configuration" value="Release"/>
+		</antcall>
+		<antcall target="build-project-as">
+			<param name="project.path" value="../at.pkgs.logging"/>
+			<param name="output.name" value="At.Pkgs.Logging.dll"/>
+			<param name="configuration" value="UnityRelease"/>
+		</antcall>
+	</target>
+	<target name="build-com-unitystack">
+		<antcall target="build-project-as">
+			<param name="project.path" value="../com.unitystack"/>
+			<param name="output.name" value="UnityStack.dll"/>
+			<param name="configuration" value="Debug"/>
+		</antcall>
+		<antcall target="build-project-as">
+			<param name="project.path" value="../com.unitystack"/>
+			<param name="output.name" value="UnityStack.dll"/>
+			<param name="configuration" value="Release"/>
+		</antcall>
+		<antcall target="build-project-as">
+			<param name="project.path" value="../com.unitystack"/>
+			<param name="output.name" value="UnityStack.dll"/>
+			<param name="configuration" value="UnityDebug"/>
+		</antcall>
+		<antcall target="build-project-as">
+			<param name="project.path" value="../com.unitystack"/>
+			<param name="output.name" value="UnityStack.dll"/>
+			<param name="configuration" value="UnityRelease"/>
+		</antcall>
+	</target>
+	<target name="build-com-unitystack-editor">
+		<antcall target="build-project-as">
+			<param name="project.path" value="../com.unitystack.editor"/>
+			<param name="output.name" value="UnityStack.Editor.dll"/>
+			<param name="configuration" value="Debug"/>
+		</antcall>
+		<antcall target="build-project-as">
+			<param name="project.path" value="../com.unitystack.editor"/>
+			<param name="output.name" value="UnityStack.Editor.dll"/>
+			<param name="configuration" value="Release"/>
+		</antcall>
+		<antcall target="build-project-as">
+			<param name="project.path" value="../com.unitystack.editor"/>
+			<param name="output.name" value="UnityStack.Editor.dll"/>
+			<param name="configuration" value="UnityDebug"/>
+		</antcall>
+		<antcall target="build-project-as">
+			<param name="project.path" value="../com.unitystack.editor"/>
+			<param name="output.name" value="UnityStack.Editor.dll"/>
+			<param name="configuration" value="UnityRelease"/>
+		</antcall>
+	</target>
+	<target name="build-com-unitystack-editor-runner">
+		<antcall target="build-project-as">
+			<param name="project.path" value="../com.unitystack.editor.runner"/>
+			<param name="output.name" value="UnityStack.Editor.Runner.exe"/>
+			<param name="configuration" value="Debug"/>
+		</antcall>
+		<antcall target="build-project-as">
+			<param name="project.path" value="../com.unitystack.editor.runner"/>
+			<param name="output.name" value="UnityStack.Editor.Runner.exe"/>
+			<param name="configuration" value="Release"/>
+		</antcall>
+	</target>
+	<target name="publish">
+		<delete>
+			<fileset dir="../../binary/${configuration}">
+				<include name="*"/>
+			</fileset>
+			<fileset dir="../../binary/${configuration}/Utility">
+				<include name="*"/>
+			</fileset>
+			<fileset dir="../../binary/${configuration}/Plugin">
+				<include name="*"/>
+			</fileset>
+			<fileset dir="../../binary/${configuration}/Plugin/Editor">
+				<include name="*"/>
+			</fileset>
+		</delete>
+		<copy todir="../../binary/${configuration}/Utility">
+			<fileset dir="../at.pkgs.logging/bin/${configuration}">
+				<include name="At.Pkgs.Logging.*"/>
+			</fileset>
+			<fileset dir="../com.unitystack/bin/${configuration}">
+				<include name="UnityStack.*"/>
+			</fileset>
+			<fileset dir="../com.unitystack.editor/bin/${configuration}">
+				<include name="UnityStack.Editor.*"/>
+			</fileset>
+			<fileset dir="../com.unitystack.editor.runner/bin/${configuration}">
+				<include name="UnityStack.Editor.Runner.*"/>
+			</fileset>
+		</copy>
+		<copy todir="../../binary/${configuration}/Plugin">
+			<fileset dir="../at.pkgs.logging/bin/Unity${configuration}">
+				<include name="At.Pkgs.Logging.*"/>
+			</fileset>
+			<fileset dir="../com.unitystack/bin/Unity${configuration}">
+				<include name="UnityStack.*"/>
+			</fileset>
+		</copy>
+		<copy todir="../../binary/${configuration}/Plugin/Editor">
+			<fileset dir="../com.unitystack.editor/bin/Unity${configuration}">
+				<include name="UnityStack.Editor.*"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="build-all">
+		<antcall target="build-at-pkgs-logging"/>
+		<antcall target="build-com-unitystack"/>
+		<antcall target="build-com-unitystack-editor"/>
+		<antcall target="build-com-unitystack-editor-runner"/>
+		<antcall target="publish">
+			<param name="configuration" value="Debug"/>
+		</antcall>
+		<antcall target="publish">
+			<param name="configuration" value="Release"/>
+		</antcall>
+	</target>
+</project>

@@ -80,17 +80,16 @@ namespace UnityStack
         {
             if (IsVirtual)
             {
-                return Paths.Combine(
-                    this._resourcePath,
-                    path);
+                string candidate;
+
+                candidate = Paths.Combine(this._resourcePath, path);
+                if (File.Exists(candidate)) return candidate;
+                if (Directory.Exists(candidate)) return candidate;
             }
-            else
-            {
-                path = Paths.Combine(
-                    Paths.GetDirectoryName(path),
-                    Paths.GetFileNameWithoutExtension(path));
-                return path.Replace(Paths.DirectorySeparatorChar, '/');
-            }
+            path = Paths.Combine(
+                Paths.GetDirectoryName(path),
+                Paths.GetFileNameWithoutExtension(path));
+            return path.Replace(Paths.DirectorySeparatorChar, '/');
         }
 
         public string GetResourceAsString(string path, bool throwOnError)
