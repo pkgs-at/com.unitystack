@@ -81,6 +81,7 @@
     <Compile Include="Container\EveryNewInstanceOf.cs" />
     <Compile Include="Container\ImmediateInstanceOf.cs" />
     <Compile Include="Container\SingletonInstanceOf.cs" />
+    <Compile Include="FutureEvent.cs" />
     <Compile Include="FutureExceptionEventHandlerChain.cs" />
     <Compile Include="FutureTask.cs" />
     <Compile Include="HandledFutureException.cs" />
