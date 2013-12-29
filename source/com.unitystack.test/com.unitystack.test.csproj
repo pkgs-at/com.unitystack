@@ -36,7 +36,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject />
+    <StartupObject>UnityStack.Test.ObjectDump</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="DomainTests.cs" />
     <Compile Include="FutureTaskTests.cs" />
+    <Compile Include="ObjectDump.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

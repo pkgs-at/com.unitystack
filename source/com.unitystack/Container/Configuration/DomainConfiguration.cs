@@ -79,6 +79,11 @@ namespace UnityStack.Container.Configuration
             this._instances = new Dictionary<string, InstanceSetting>();
         }
 
+        public bool Contains(string fieldName)
+        {
+            return this._instances.ContainsKey(fieldName);
+        }
+
         public InstanceSetting this[string fieldName]
         {
             get

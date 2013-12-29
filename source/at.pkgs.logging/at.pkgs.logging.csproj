@@ -86,6 +86,7 @@
     <Compile Include="Sink\Synchronized.cs" />
     <Compile Include="Sink\Tee.cs" />
     <Compile Include="Sink\WriterAppender.cs" />
+    <Compile Include="Dumper.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

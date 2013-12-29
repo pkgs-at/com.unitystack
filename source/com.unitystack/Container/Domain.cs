@@ -91,7 +91,13 @@ namespace UnityStack.Container
                     after.Add(bag);
                 }
                 bag.InstanceOf = (ConfigurableInstanceOf)value;
-                bag.InstanceSetting = configuration[info.Name];
+                if (configuration.Contains(info.Name))
+                    bag.InstanceSetting = configuration[info.Name];
+                else
+                    bag.InstanceSetting = new DomainConfiguration.InstanceSetting(
+                        info.Name,
+                        bag.InstanceOf.Default,
+                        new Dictionary<string, string>());
             }
             sorting.Sort();
             foreach (ConfigurableInstanceOfBag bag in sorting)

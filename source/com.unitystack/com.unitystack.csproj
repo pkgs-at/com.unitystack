@@ -72,6 +72,7 @@
     <Compile Include="Container\ConfigurableInstanceOf.cs" />
     <Compile Include="Container\Configuration\BasicDomainConfiguration.cs" />
     <Compile Include="Container\Configuration\DomainConfiguration.cs" />
+    <Compile Include="Container\DomainAttribute.cs" />
     <Compile Include="CoroutineMotor.cs" />
     <Compile Include="CoroutineMotorOfUnityInternal.cs" />
     <Compile Include="Future.cs" />

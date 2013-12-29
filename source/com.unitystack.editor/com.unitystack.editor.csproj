@@ -72,6 +72,7 @@
     <Compile Include="Base\BaseBatchParameter.cs" />
     <Compile Include="Batch\ExecuteMenuItems.cs" />
     <Compile Include="Batch\ExecuteMenuItemsParameter.cs" />
+    <Compile Include="DomainGenerator.cs" />
     <Compile Include="Protocol\Connection.cs" />
     <Compile Include="Protocol\RunnerCommand.cs" />
     <Compile Include="Protocol\RunnerConnection.cs" />

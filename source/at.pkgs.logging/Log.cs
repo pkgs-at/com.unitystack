@@ -25,6 +25,9 @@ namespace At.Pkgs.Logging
     public sealed class Log
     {
 
+        private static DumperFormatProvider _dumper =
+            new DumperFormatProvider();
+
         private WeakReference _manager;
 
         private string _name;
@@ -136,7 +139,7 @@ namespace At.Pkgs.Logging
             entity.Frames =
                 this.Frames(++depth, manager.LogFrameDepth, manager.LogExtendedFrame);
             entity.Message =
-                arguments.Length <= 0 ? format : String.Format(format, arguments);
+                arguments.Length <= 0 ? format : String.Format(_dumper, format, arguments);
             entity.Cause = throwable;
             manager.Append(entity);
         }
@@ -196,6 +199,16 @@ namespace At.Pkgs.Logging
             this.Append(1, level, cause, format, arguments);
         }
 
+        public void Trace(
+            object value)
+        {
+            LogLevel level;
+
+            level = LogLevel.Trace;
+            if (level > this._level) return;
+            this.Append(1, level, null, "{0:@}", value);
+        }
+
         public bool DebugEnabled
         {
             get
@@ -249,6 +262,16 @@ namespace At.Pkgs.Logging
             level = LogLevel.Debug;
             if (level > this._level) return;
             this.Append(1, level, cause, format, arguments);
+        }
+
+        public void Debug(
+            object value)
+        {
+            LogLevel level;
+
+            level = LogLevel.Debug;
+            if (level > this._level) return;
+            this.Append(1, level, null, "{0:@}", value);
         }
 
         public bool NoticeEnabled
@@ -306,6 +329,16 @@ namespace At.Pkgs.Logging
             this.Append(1, level, cause, format, arguments);
         }
 
+        public void Notice(
+            object value)
+        {
+            LogLevel level;
+
+            level = LogLevel.Notice;
+            if (level > this._level) return;
+            this.Append(1, level, null, "{0:@}", value);
+        }
+
         public bool ErrorEnabled
         {
             get
@@ -361,6 +394,16 @@ namespace At.Pkgs.Logging
             this.Append(1, level, cause, format, arguments);
         }
 
+        public void Error(
+            object value)
+        {
+            LogLevel level;
+
+            level = LogLevel.Error;
+            if (level > this._level) return;
+            this.Append(1, level, null, "{0:@}", value);
+        }
+
         public bool FatalEnabled
         {
             get
@@ -414,6 +457,16 @@ namespace At.Pkgs.Logging
             level = LogLevel.Fatal;
             if (level > this._level) return;
             this.Append(1, level, cause, format, arguments);
+        }
+
+        public void Fatal(
+            object value)
+        {
+            LogLevel level;
+
+            level = LogLevel.Fatal;
+            if (level > this._level) return;
+            this.Append(1, level, null, "{0:@}", value);
         }
 
     }

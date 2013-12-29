@@ -24,6 +24,11 @@ namespace UnityStack.Container
     public abstract class ConfigurableInstanceOf
     {
 
+        internal abstract string Default
+        {
+            get;
+        }
+
         internal abstract void Configure(
             Domain domain,
             string name,

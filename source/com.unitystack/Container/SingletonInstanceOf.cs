@@ -32,16 +32,29 @@ namespace UnityStack.Container
 
         public SingletonInstanceOf(
             int activateOrder,
+            string @default,
             params InstanceTypeForName[] types)
-            : base(types)
+            : base(@default, types)
         {
             this._activateOrder = activateOrder;
             this._instance = null;
         }
 
         public SingletonInstanceOf(
+            int activateOrder,
             params InstanceTypeForName[] types)
-            : this(Int32.MaxValue, types)
+            : this(activateOrder, null, types)
+        { /* do nothing */ }
+
+        public SingletonInstanceOf(
+            string @default,
+            params InstanceTypeForName[] types)
+            : this(Int32.MaxValue, @default, types)
+        { /* do nothing */ }
+
+        public SingletonInstanceOf(
+            params InstanceTypeForName[] types)
+            : this(Int32.MaxValue, null, types)
         { /* do nothing */ }
 
         public int ActivateOrder

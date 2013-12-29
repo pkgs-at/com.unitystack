@@ -27,6 +27,8 @@ namespace UnityStack.Container
         where InstanceType : class
     {
 
+        private readonly string _default;
+
         private readonly InstanceTypeForName[] _types;
 
         private Domain _domain;
@@ -37,10 +39,23 @@ namespace UnityStack.Container
 
         private IDictionary<string, string> _properties;
 
-        public EveryNewInstanceOf(params InstanceTypeForName[] types)
+        public EveryNewInstanceOf(string @default, params InstanceTypeForName[] types)
         {
+            this._default = @default;
             this._types = types;
             this._type = null;
+        }
+
+        public EveryNewInstanceOf(params InstanceTypeForName[] types)
+            : this(null, types)
+        { /* do nothing */ }
+
+        internal override string Default
+        {
+            get
+            {
+                return this._default;
+            }
         }
 
         internal override void Configure(

@@ -43,7 +43,7 @@ namespace UnityStack.Container.Configuration
                         break;
                     default:
                         throw scanner.CreateXmlException(
-                            "unexpected element <{0}/> in <Use/>",
+                            "unexpected element <{0}/> in <Field/>",
                             child.Name);
                 }
             }
