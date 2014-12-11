@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+#define DEBUG
+
 using System;
 using System.Diagnostics;
 
